@@ -3,6 +3,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:streaming_data_dashboard/features/home/UI/home_screen.dart';
+import 'package:streaming_data_dashboard/features/settings/UI/settings_page.dart';
 
 class AppRouter {
   final SharedPreferences pref;
@@ -23,6 +24,13 @@ class AppRouter {
             return HomePage();
           },
         ),
+        GoRoute(
+          path: '/settings',
+          name: 'Settings',
+          builder: (context, state) {
+            return SettingsPage();
+          },
+        ),
         
         // GoRoute(
         //   path: '/book_reader',
@@ -33,6 +41,7 @@ class AppRouter {
         //   },
         // ),
       ],
+      redirect: (context, state) => "/settings",
     );
     return router;
   }
