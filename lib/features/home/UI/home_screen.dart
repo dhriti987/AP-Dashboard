@@ -7,10 +7,15 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(actions: [Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: IconButton(onPressed: (){}, icon: const Icon(Icons.settings_suggest_outlined, size: 40,)),
-      )]),
+      appBar: AppBar(actions: [
+        IconButton(
+          onPressed: () {},
+          icon: const Icon(
+            Icons.settings_suggest_outlined,
+          ),
+          iconSize: 40,
+        )
+      ]),
     );
   }
 }

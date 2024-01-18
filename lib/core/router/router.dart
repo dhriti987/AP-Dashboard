@@ -31,7 +31,7 @@ class AppRouter {
             return SettingsPage();
           },
         ),
-        
+
         // GoRoute(
         //   path: '/book_reader',
         //   name: 'BookReader',
@@ -41,7 +41,7 @@ class AppRouter {
         //   },
         // ),
       ],
-      redirect: (context, state) => "/settings",
+      // redirect: (context, state) => "/settings",
     );
     return router;
   }
