@@ -1,114 +1,149 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:streaming_data_dashboard/core/utilities/gradient_text.dart';
+import 'package:streaming_data_dashboard/features/login/bloc/login_bloc.dart';
+import 'package:streaming_data_dashboard/service_locator.dart';
 
 class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
+  LoginPage({super.key});
+
+  final LoginBloc loginBloc = sl.get<LoginBloc>();
+  final TextEditingController _username = TextEditingController();
+  final TextEditingController _password = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Login Screen'),
-        centerTitle: true,
-        backgroundColor: Color.fromARGB(255, 144, 93, 179),
-      ),
-      body: Center(
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                'Adani',
-                style: TextStyle(
-                  fontSize: 45,
-                  color: Colors.teal,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Pacifico',
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 30),
-                child: Form(
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 500),
-                        child: TextFormField(
-                          keyboardType: TextInputType.emailAddress,
-                          decoration: InputDecoration(
-                            labelText: 'Email',
-                            hintText: 'Enter email',
-                            prefixIcon: Icon(Icons.email),
-                            border: OutlineInputBorder(),
-                            filled: true,
-                            fillColor: Colors.white,
-                          ),
-                          onChanged: (String value) {},
-                          validator: (value) {
-                            return value!.isEmpty ? 'Please enter email' : null;
-                          },
-                        ),
-                      ),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 500),
-                        child: TextFormField(
-                          keyboardType: TextInputType.visiblePassword,
-                          obscureText: true,
-                          decoration: InputDecoration(
-                            labelText: 'Password',
-                            hintText: 'Enter Password',
-                            prefixIcon: Icon(Icons.password),
-                            border: OutlineInputBorder(),
-                          ),
-                          onChanged: (String value) {},
-                          validator: (value) {
-                            return value!.isEmpty
-                                ? 'Please enter Password'
-                                : null;
-                          },
-                        ),
-                      ),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 500),
-                        child: MaterialButton(
-                          minWidth: double.infinity,
-                          onPressed: () {},
-                          child: Text('Login'),
-                          color: Colors.teal,
-                          textColor: Colors.white,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      TextButton(
-                          onPressed: () {
-                            // Add logic for "Forgot Password?"
-                            print("Forgot Password?");
-                          },
-                          child: Text(
-                            'Forgot Password?',
-                            style: TextStyle(
-                              color: Colors.teal,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ))
-                    ],
-                  ),
-                ),
-              ),
-            ],
+    Size size = MediaQuery.of(context).size;
+    String? usernameErrorText;
+    String? passwordErrorText;
+
+    return BlocConsumer<LoginBloc, LoginState>(
+      bloc: loginBloc,
+      listenWhen: (previous, current) => current is LoginActionState,
+      buildWhen: (previous, current) => current is! LoginActionState,
+      listener: (context, state) {},
+      builder: (context, state) {
+        print(state.runtimeType);
+        if (state is UsernameValidationFailedState) {
+          print("username error");
+          usernameErrorText = state.error;
+        }
+        if (state is PasswordValidationFailedState) {
+          print("password error");
+          passwordErrorText = state.error;
+        }
+        return Scaffold(
+          appBar: AppBar(
+            title: Text('Login Screen'),
+            centerTitle: true,
+            backgroundColor: Color.fromARGB(255, 144, 93, 179),
           ),
-        ),
-      ),
+          body: Center(
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const GradientText(
+                    'adani',
+                    gradient: LinearGradient(colors: [
+                      Color(0xff0b74b0),
+                      Color(0xff75479c),
+                      Color(0xffbd3861)
+                    ]),
+                    style: TextStyle(
+                      fontSize: 55,
+                      color: Colors.teal,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Pacifico',
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 30),
+                    child: Form(
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: size.width / 3),
+                            child: TextFormField(
+                              controller: _username,
+                              keyboardType: TextInputType.emailAddress,
+                              decoration: InputDecoration(
+                                labelText: 'Username',
+                                hintText: 'Enter username',
+                                prefixIcon: Icon(Icons.person_2_sharp),
+                                border: OutlineInputBorder(),
+                                filled: true,
+                                fillColor: Colors.white,
+                                errorText: usernameErrorText,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 30,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: size.width / 3),
+                            child: TextFormField(
+                              controller: _password,
+                              keyboardType: TextInputType.visiblePassword,
+                              obscureText: true,
+                              decoration: InputDecoration(
+                                labelText: 'Password',
+                                hintText: 'Enter Password',
+                                prefixIcon: Icon(Icons.password),
+                                border: OutlineInputBorder(),
+                                errorText: passwordErrorText,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 30,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: size.width / 3),
+                            child: MaterialButton(
+                              minWidth: double.infinity,
+                              onPressed: () {
+                                loginBloc.add(LoginButtonOnClickedEvent(
+                                    username: _username.text,
+                                    password: _password.text));
+                              },
+                              child: Text('Login'),
+                              color: Colors.teal,
+                              textColor: Colors.white,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          TextButton(
+                              onPressed: () {
+                                // Add logic for "Forgot Password?"
+                                print("Forgot Password?");
+                              },
+                              child: Text(
+                                'Forgot Password?',
+                                style: TextStyle(
+                                  color: Colors.teal,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ))
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

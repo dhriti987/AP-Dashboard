@@ -1,17 +1,21 @@
 import 'package:dio/dio.dart';
 
-class ApiException implements Exception{
+class ApiException implements Exception {
   final DioException exception;
+  final List<String> error;
 
-  ApiException({required this.exception});
-  List<String> call(){
+  ApiException({required this.exception, required this.error});
+  List<String> call() {
     print(exception.response);
     print(exception.type);
     switch (exception.type) {
       case DioExceptionType.connectionError:
-        return ["Conectivity Error","Could not Connect to the Server, Please Check Your Internet Connection."];
+        return [
+          "Conectivity Error",
+          "Could not Connect to the Server, Please Check Your Internet Connection."
+        ];
       default:
-        return ["Error", "Unknown Error occured."];
+        return error;
     }
   }
 }

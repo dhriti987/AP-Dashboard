@@ -5,17 +5,14 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 class ApiService {
   final SharedPreferences pref;
 
-  ApiService( {required this.pref});
+  ApiService({required this.pref});
 
   BaseOptions getApiOptions() {
-    final token = pref.getString("token")?? "";
+    final token = pref.getString("access_token") ?? "";
     final apiOptions = BaseOptions(
-      baseUrl: dotenv.env['SERVER_URL'] ?? "http://127.0.0.1:8000",
-      connectTimeout: const Duration(seconds: 5),
-      headers: {
-        "Authorization": "Token $token"
-      }
-    );
+        baseUrl: dotenv.env['SERVER_URL'] ?? "http://127.0.0.1:8000",
+        connectTimeout: const Duration(seconds: 5),
+        headers: {"Authorization": "Token $token"});
     return apiOptions;
   }
 
@@ -27,24 +24,25 @@ class ApiService {
     return apiOptions;
   }
 
-  BaseOptions getImageApiOptions(){
+  BaseOptions getImageApiOptions() {
     return BaseOptions(
-    responseType: ResponseType.bytes,
-    headers: Map.from({
-      'Accept': '*/*',
-      'User-Agent':
-          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36'
-    }));
+        responseType: ResponseType.bytes,
+        headers: Map.from({
+          'Accept': '*/*',
+          'User-Agent':
+              'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36'
+        }));
   }
 
-  Dio getApi(){
+  Dio getApi() {
     return Dio(getApiOptions());
   }
-  Dio getApiWithoutHeader(){
+
+  Dio getApiWithoutHeader() {
     return Dio(getApiOptionsWithoutHeader());
   }
-  Dio getImageApi(){
+
+  Dio getImageApi() {
     return Dio(getImageApiOptions());
   }
-
 }
