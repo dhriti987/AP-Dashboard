@@ -37,6 +37,7 @@ class LoginRepository {
       await _sharedPreferences.setString(
           "refreshToken", response.data['refresh']);
       await _sharedPreferences.setBool("isAdmin", decodedToken["is_admin"]);
+      _appRouter.isAuthenticated = true;
     } on DioException catch (e) {
       throw ApiException(
           exception: e,

@@ -2,7 +2,9 @@ import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:streaming_data_dashboard/core/router/router.dart';
 import 'package:streaming_data_dashboard/core/services/api_service.dart';
+import 'package:streaming_data_dashboard/features/dashboard/repository/dashboard_repository.dart';
 import 'package:streaming_data_dashboard/features/home/bloc/home_bloc.dart';
+import 'package:streaming_data_dashboard/features/home/repository/home_repository.dart';
 import 'package:streaming_data_dashboard/features/login/bloc/login_bloc.dart';
 import 'package:streaming_data_dashboard/features/login/repository/login_repository.dart';
 import 'package:streaming_data_dashboard/features/settings/bloc/settings_bloc.dart';
@@ -29,4 +31,10 @@ void setup() {
       () => LoginRepository(
           apiService: sl(), sharedPreferences: sl(), appRouter: sl()),
       dependsOn: [ApiService, SharedPreferences, AppRouter]);
+  sl.registerSingletonWithDependencies<HomeRepository>(
+      () => HomeRepository(apiService: sl()),
+      dependsOn: [ApiService]);
+  sl.registerSingletonWithDependencies<DashboardRepository>(
+      () => DashboardRepository(apiService: sl()),
+      dependsOn: [ApiService]);
 }

@@ -36,6 +36,23 @@ class HomePage extends StatelessWidget {
         }
       },
       builder: (context, state) {
+        Widget body = Center(
+          child: CircularProgressIndicator(),
+        );
+        if (state is HomeInitial) {
+          homeBloc.add(HomeDataFetchEvent());
+        } else if (state is HomeLoadingState) {
+          body = Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (state is HomeLoadingSuccessState) {
+          plants = state.plants;
+          body = loadedBody(plants);
+        } else if (state is HomeLoadingFailedState) {
+          body = Center(
+            child: Text("Error!"),
+          );
+        }
         return Scaffold(
           appBar: AppBar(actions: [
             IconButton(
@@ -48,35 +65,39 @@ class HomePage extends StatelessWidget {
               iconSize: 40,
             )
           ]),
-          body: SizedBox(
-            width: double.maxFinite,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-              child: SingleChildScrollView(
-                child: Wrap(
-                  spacing: 20,
-                  runSpacing: 25,
-                  alignment: WrapAlignment.start,
-                  // runAlignment: WrapAlignment.spaceEvenly,
-                  // crossAxisAlignment: WrapCrossAlignment.start,
-                  children: plants
-                      .map<Widget>((plant) => PlantItemWidget(
-                            plant: plant,
-                            onTap: () {
-                              homeBloc.add(OnPlantClickedEvent(plant: plant));
-                            },
-                          ))
-                      .toList()
-                    ..add(const SizedBox(
-                      height: 20,
-                      width: double.maxFinite,
-                    )),
-                ),
-              ),
-            ),
-          ),
+          body: body,
         );
       },
+    );
+  }
+
+  SizedBox loadedBody(List<Plant> plants) {
+    return SizedBox(
+      width: double.maxFinite,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+        child: SingleChildScrollView(
+          child: Wrap(
+            spacing: 20,
+            runSpacing: 25,
+            alignment: WrapAlignment.start,
+            // runAlignment: WrapAlignment.spaceEvenly,
+            // crossAxisAlignment: WrapCrossAlignment.start,
+            children: plants
+                .map<Widget>((plant) => PlantItemWidget(
+                      plant: plant,
+                      onTap: () {
+                        homeBloc.add(OnPlantClickedEvent(plant: plant));
+                      },
+                    ))
+                .toList()
+              ..add(const SizedBox(
+                height: 20,
+                width: double.maxFinite,
+              )),
+          ),
+        ),
+      ),
     );
   }
 }

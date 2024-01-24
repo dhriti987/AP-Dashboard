@@ -8,6 +8,8 @@ import 'package:window_manager/window_manager.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  windowManager.ensureInitialized();
+  windowManager.setMinimumSize(Size(1200, 650));
   await dotenv.load(fileName: ".env");
   setup();
   sl.allReady().then((value) {

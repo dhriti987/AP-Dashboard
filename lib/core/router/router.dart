@@ -11,7 +11,7 @@ import 'package:streaming_data_dashboard/models/plant_model.dart';
 
 class AppRouter {
   final SharedPreferences pref;
-  bool isAuthenticated = true;
+  bool isAuthenticated = false;
 
   AppRouter({required this.pref});
 
