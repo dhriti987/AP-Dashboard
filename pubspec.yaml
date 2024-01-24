@@ -46,6 +46,7 @@ dependencies:
   bloc: ^8.1.2
   meta: ^1.9.1
   jwt_decoder: ^2.0.1
+  window_manager: ^0.3.7
 
 dev_dependencies:
   flutter_test:
