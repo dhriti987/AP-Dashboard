@@ -14,27 +14,30 @@ class UnitEditPage extends StatefulWidget {
 class _UnitEditPageState extends State<UnitEditPage> {
   List<Unit> units = [
     Unit(
-        id: 1,
-        pointId: "pointIdpointIdpointId",
-        systemGuid: "systemGuidsystemGuidsystemGuidsystemGuid",
-        plant: "plant",
-        unit: "unit",
-        code: "code"),
-    Unit(
-      id: 2,
+      id: 1,
       pointId: "pointIdpointIdpointId",
       systemGuid: "systemGuidsystemGuidsystemGuidsystemGuid",
       plant: "plant",
       unit: "unit",
       code: "code",
+      maxVoltage: 0,
     ),
+    Unit(
+        id: 2,
+        pointId: "pointIdpointIdpointId",
+        systemGuid: "systemGuidsystemGuidsystemGuidsystemGuid",
+        plant: "plant",
+        unit: "unit",
+        code: "code",
+        maxVoltage: 0),
     Unit(
         id: 3,
         pointId: "pointIdpointIdpointId",
         systemGuid: "systemGuidsystemGuidsystemGuidsystemGuid",
         plant: "plant",
         unit: "unit",
-        code: "code"),
+        code: "code",
+        maxVoltage: 0),
   ];
 
   @override

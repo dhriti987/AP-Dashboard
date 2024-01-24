@@ -5,6 +5,8 @@ class Unit {
   final String plant;
   final String unit;
   final String code;
+  final int maxVoltage;
+  final double unitValue = 0;
 
   Unit(
       {required this.id,
@@ -12,17 +14,18 @@ class Unit {
       required this.systemGuid,
       required this.plant,
       required this.unit,
-      required this.code});
+      required this.code,
+      required this.maxVoltage});
 
   factory Unit.fromJson(Map<String, dynamic> json) {
     return Unit(
-      id: json['id'],
-      pointId: json['point_id'],
-      systemGuid: json['system_guid'],
-      plant: json['plant_name'],
-      unit: json['code'],
-      code: json['code'],
-    );
+        id: json['id'],
+        pointId: json['point_id'],
+        systemGuid: json['system_guid'],
+        plant: json['plant_name'],
+        unit: json['code'],
+        code: json['code'],
+        maxVoltage: json["max_voltage"]);
   }
 
   static List<Unit> listFromJson(List<dynamic> data) =>
