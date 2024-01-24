@@ -74,4 +74,9 @@ class LoginRepository {
       });
     }
   }
+
+  logout() async {
+    await _sharedPreferences.remove("refreshToken");
+    _appRouter.getRouter().go("/login");
+  }
 }

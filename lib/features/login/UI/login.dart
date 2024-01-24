@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:streaming_data_dashboard/core/utilities/gradient_text.dart';
 import 'package:streaming_data_dashboard/features/login/bloc/login_bloc.dart';
 import 'package:streaming_data_dashboard/service_locator.dart';
@@ -22,15 +23,28 @@ class LoginPage extends StatelessWidget {
       bloc: loginBloc,
       listenWhen: (previous, current) => current is LoginActionState,
       buildWhen: (previous, current) => current is! LoginActionState,
-      listener: (context, state) {},
+      listener: (context, state) {
+        if (state is LoginFailedState) {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text(state.exception.error[0]),
+                content: Text(state.exception.error[1]),
+              );
+            },
+          );
+        }
+        if (state is LoginSuccessState) {
+          context.go('/');
+        }
+      },
       builder: (context, state) {
         print(state.runtimeType);
         if (state is UsernameValidationFailedState) {
-          print("username error");
           usernameErrorText = state.error;
         }
         if (state is PasswordValidationFailedState) {
-          print("password error");
           passwordErrorText = state.error;
         }
         return Scaffold(
