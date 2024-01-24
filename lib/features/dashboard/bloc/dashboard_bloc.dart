@@ -22,7 +22,19 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     emit(DashboardLoadingState());
     try {
       var data = await _dashboardRepository.getAllUnitsByPlant(event.plantName);
-      emit(DashboardLoadingSuccessState(units: data));
+      double totalValue = 0;
+      double maxValue = 0;
+      data.forEach(
+        (element) {
+          totalValue += element.unitValue;
+          maxValue += element.maxVoltage;
+        },
+      );
+      emit(DashboardLoadingSuccessState(
+          units: data,
+          frequency: 50.1,
+          totalValue: totalValue,
+          maxValue: maxValue));
     } on ApiException catch (e) {
       emit(DashboardLoadingFailedState(apiException: e));
     }

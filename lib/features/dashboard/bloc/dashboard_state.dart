@@ -17,6 +17,13 @@ class DashboardLoadingFailedState extends DashboardState {
 
 class DashboardLoadingSuccessState extends DashboardState {
   final List<Unit> units;
+  final double frequency;
+  final double totalValue;
+  final double maxValue;
 
-  DashboardLoadingSuccessState({required this.units});
+  DashboardLoadingSuccessState(
+      {required this.units,
+      required this.frequency,
+      required this.totalValue,
+      required this.maxValue});
 }
