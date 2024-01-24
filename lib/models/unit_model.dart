@@ -6,7 +6,7 @@ class Unit {
   final String unit;
   final String code;
   final int maxVoltage;
-  final double unitValue = 0;
+  double unitValue = 0;
 
   Unit(
       {required this.id,
