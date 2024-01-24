@@ -3,17 +3,54 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gauge_indicator/gauge_indicator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:streaming_data_dashboard/features/dashboard/bloc/dashboard_bloc.dart';
 import 'package:streaming_data_dashboard/models/plant_model.dart';
 import 'package:streaming_data_dashboard/service_locator.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:web_socket_channel/status.dart' as status;
 
 import '../../../models/unit_model.dart';
 
-class DashboardPage extends StatelessWidget {
+class DashboardPage extends StatefulWidget {
   DashboardPage({super.key, required this.plant});
 
   final Plant plant;
+
+  @override
+  State<DashboardPage> createState() => _DashboardPageState();
+}
+
+class _DashboardPageState extends State<DashboardPage> {
   final DashboardBloc dashboardBloc = sl.get<DashboardBloc>();
+  late final WebSocketChannel channel;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    connectSocket();
+    super.initState();
+  }
+
+  Future<void> connectSocket() async {
+    final SharedPreferences sharedPreferences = sl.get<SharedPreferences>();
+    final token = sharedPreferences.getString("accessToken");
+    final wsUrl = Uri.parse(
+        'ws://127.0.0.1:8000/unit_data/?token=${token}&plant=${widget.plant.name}');
+    channel = WebSocketChannel.connect(wsUrl);
+
+    await channel.ready;
+    channel.stream.listen((message) {
+      print(message.toString());
+    });
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    channel.sink.close();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +59,7 @@ class DashboardPage extends StatelessWidget {
     // double width = ((size.width / 7) * 5) / 3.4;
     return Scaffold(
       appBar: AppBar(
-        title: Text("${plant.name} Dashboard"),
+        title: Text("${widget.plant.name} Dashboard"),
         centerTitle: true,
       ),
       // body: UnitDataWidget(
@@ -36,16 +73,18 @@ class DashboardPage extends StatelessWidget {
         },
         builder: (context, state) {
           List<Unit> units = [];
-
           double frequency = 0;
           double totalValue = 0;
           double maxValue = 0;
           if (state is DashboardInitial) {
-            dashboardBloc.add(FetchUnitDataEvent(plantName: plant.name));
+            dashboardBloc.add(FetchUnitDataEvent(plantName: widget.plant.name));
           } else if (state is DashboardLoadingState) {
             return Center(child: CircularProgressIndicator());
           } else if (state is DashboardLoadingSuccessState) {
             units = state.units;
+            frequency = state.frequency;
+            totalValue = state.totalValue;
+            maxValue = state.maxValue;
           }
           return Container(
             color: Color.fromARGB(255, 132, 200, 250),
@@ -62,7 +101,7 @@ class DashboardPage extends StatelessWidget {
                           value: 50.1,
                           maxValue: 60,
                           valueWidget: Text.rich(TextSpan(
-                              text: "50.1",
+                              text: frequency.toString(),
                               children: [
                                 TextSpan(
                                     text: "hz",
@@ -74,10 +113,10 @@ class DashboardPage extends StatelessWidget {
                         ),
                         UnitData2Widget(
                           name: ".    Total    .",
-                          value: 1123,
-                          maxValue: 2970,
+                          value: totalValue,
+                          maxValue: maxValue,
                           valueWidget: Text(
-                            "1123",
+                            totalValue.toString(),
                             style: TextStyle(
                                 // fontSize: height / 5,
                                 fontWeight: FontWeight.w600),
@@ -99,7 +138,9 @@ class DashboardPage extends StatelessWidget {
                       // crossAxisAlignment: WrapCrossAlignment.start,
                       children: units
                           .map<Widget>((unit) => UnitDataWidget(
-                              unit: unit, onTap: () {}, unitValue: 123))
+                              unit: unit,
+                              onTap: () {},
+                              unitValue: unit.unitValue))
                           .toList()
                         ..add(const SizedBox(
                           height: 20,
@@ -219,7 +260,7 @@ class _UnitDataWidgetState extends State<UnitDataWidget> {
                     child: FittedBox(
                       fit: BoxFit.fill,
                       child: Text(
-                        widget.unit.pointId,
+                        widget.unit.unit,
                         style: TextStyle(),
                       ),
                     ),
