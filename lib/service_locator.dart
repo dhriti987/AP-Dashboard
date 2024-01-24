@@ -2,6 +2,7 @@ import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:streaming_data_dashboard/core/router/router.dart';
 import 'package:streaming_data_dashboard/core/services/api_service.dart';
+import 'package:streaming_data_dashboard/features/dashboard/bloc/dashboard_bloc.dart';
 import 'package:streaming_data_dashboard/features/dashboard/repository/dashboard_repository.dart';
 import 'package:streaming_data_dashboard/features/home/bloc/home_bloc.dart';
 import 'package:streaming_data_dashboard/features/home/repository/home_repository.dart';
@@ -25,6 +26,7 @@ void setup() {
   sl.registerFactory(() => SettingsBloc());
   sl.registerFactory(() => LoginBloc());
   sl.registerFactory(() => UnitsEditBloc());
+  sl.registerFactory(() => DashboardBloc());
 
   //Repositories
   sl.registerSingletonWithDependencies<LoginRepository>(
