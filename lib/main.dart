@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:streaming_data_dashboard/core/router/router.dart';
 import 'package:streaming_data_dashboard/core/theme/common_theme.dart';
@@ -7,10 +8,8 @@ import 'package:window_manager/window_manager.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await windowManager.ensureInitialized();
-  setup();
   await dotenv.load(fileName: ".env");
-  await windowManager.setMinimumSize(const Size(1000, 600));
+  setup();
   sl.allReady().then((value) {
     runApp(const MyApp());
   });
@@ -22,10 +21,19 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      routerConfig: sl.get<AppRouter>().getRouter(),
-      debugShowCheckedModeBanner: false,
-      theme: lightTheme,
+    return KeyboardListener(
+      focusNode: FocusNode(),
+      onKeyEvent: (value) async {
+        if ((value is KeyUpEvent) && (value.physicalKey.debugName == "F11")) {
+          windowManager.maximize();
+          windowManager.setFullScreen(!(await windowManager.isFullScreen()));
+        }
+      },
+      child: MaterialApp.router(
+        routerConfig: sl.get<AppRouter>().getRouter(),
+        debugShowCheckedModeBanner: false,
+        theme: lightTheme,
+      ),
     );
   }
 }

@@ -11,6 +11,7 @@ import 'package:streaming_data_dashboard/models/plant_model.dart';
 
 class AppRouter {
   final SharedPreferences pref;
+  bool isAuthenticated = true;
 
   AppRouter({required this.pref});
 
@@ -76,7 +77,10 @@ class AppRouter {
         //   },
         // ),
       ],
-      // redirect: (context, state) => '/login',
+      redirect: (context, state) {
+        if (isAuthenticated == false) return "/login";
+        return null;
+      },
     );
     return router;
   }

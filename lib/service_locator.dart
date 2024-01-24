@@ -26,6 +26,7 @@ void setup() {
 
   //Repositories
   sl.registerSingletonWithDependencies<LoginRepository>(
-      () => LoginRepository(apiService: sl(), sharedPreferences: sl()),
-      dependsOn: [ApiService, SharedPreferences]);
+      () => LoginRepository(
+          apiService: sl(), sharedPreferences: sl(), appRouter: sl()),
+      dependsOn: [ApiService, SharedPreferences, AppRouter]);
 }
