@@ -8,7 +8,6 @@ import 'package:streaming_data_dashboard/features/dashboard/bloc/dashboard_bloc.
 import 'package:streaming_data_dashboard/models/plant_model.dart';
 import 'package:streaming_data_dashboard/service_locator.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
-import 'package:web_socket_channel/status.dart' as status;
 
 import '../../../models/unit_model.dart';
 
@@ -24,6 +23,7 @@ class DashboardPage extends StatefulWidget {
 class _DashboardPageState extends State<DashboardPage> {
   final DashboardBloc dashboardBloc = sl.get<DashboardBloc>();
   late final WebSocketChannel channel;
+  List<Unit> units = [];
 
   @override
   void initState() {
@@ -41,7 +41,7 @@ class _DashboardPageState extends State<DashboardPage> {
 
     await channel.ready;
     channel.stream.listen((message) {
-      print(message.toString());
+      dashboardBloc.add(UnitValueChangedEvent(units: units, data: message));
     });
   }
 
@@ -72,7 +72,6 @@ class _DashboardPageState extends State<DashboardPage> {
           // TODO: implement listener
         },
         builder: (context, state) {
-          List<Unit> units = [];
           double frequency = 0;
           double totalValue = 0;
           double maxValue = 0;
@@ -97,7 +96,7 @@ class _DashboardPageState extends State<DashboardPage> {
                     child: Column(
                       children: [
                         UnitData2Widget(
-                          name: " Frequency ",
+                          name: "Frequency",
                           value: 50.1,
                           maxValue: 60,
                           valueWidget: Text.rich(TextSpan(
@@ -112,11 +111,11 @@ class _DashboardPageState extends State<DashboardPage> {
                           height: 20,
                         ),
                         UnitData2Widget(
-                          name: ".    Total    .",
+                          name: "Total",
                           value: totalValue,
                           maxValue: maxValue,
                           valueWidget: Text(
-                            totalValue.toString(),
+                            totalValue.toStringAsFixed(0),
                             style: TextStyle(
                                 // fontSize: height / 5,
                                 fontWeight: FontWeight.w600),
@@ -205,7 +204,7 @@ class _UnitDataWidgetState extends State<UnitDataWidget> {
                   return FittedBox(
                     fit: BoxFit.fill,
                     child: Text(
-                      "${(value / 3.30).toStringAsFixed(0)}%",
+                      "${(value / (widget.unit.maxVoltage / 100)).toStringAsFixed(0)}%",
                       style: TextStyle(
                           // fontSize: height / 5,
                           fontWeight: FontWeight.w600),
@@ -216,7 +215,7 @@ class _UnitDataWidgetState extends State<UnitDataWidget> {
                 value: widget.unitValue,
                 axis: GaugeAxis(
                     min: 0,
-                    max: 330,
+                    max: widget.unit.maxVoltage.toDouble(),
                     degrees: 330,
                     progressBar: GaugeProgressBar.rounded(
                         placement: GaugeProgressPlacement.inside,
@@ -226,14 +225,16 @@ class _UnitDataWidgetState extends State<UnitDataWidget> {
                     segments: [
                       GaugeSegment(
                         from: 0,
-                        to: 330 * 0.05,
+                        to: widget.unit.maxVoltage.toDouble() * 0.05,
                         cornerRadius: Radius.zero,
                       ),
                       GaugeSegment(
-                        from: 330 * 0.05,
-                        to: 330 * 0.45,
+                        from: widget.unit.maxVoltage.toDouble() * 0.05,
+                        to: widget.unit.maxVoltage.toDouble() * 0.45,
                       ),
-                      GaugeSegment(from: 330 * 0.45, to: 330)
+                      GaugeSegment(
+                          from: widget.unit.maxVoltage.toDouble() * 0.45,
+                          to: widget.unit.maxVoltage.toDouble())
                     ],
                     style: GaugeAxisStyle(
                         thickness: width / 15, segmentSpacing: 4)),
@@ -299,7 +300,10 @@ class _UnitData2WidgetState extends State<UnitData2Widget> {
     // double height = size.height / 3.7;
     double width = ((size.width / 7) * 5) / 3.4;
     return Expanded(
+      flex: 1,
       child: Container(
+        width: double.maxFinite,
+        height: double.maxFinite,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           color: Colors.white,
@@ -321,7 +325,7 @@ class _UnitData2WidgetState extends State<UnitData2Widget> {
                 child: AnimatedRadialGauge(
                   builder: (context, child, value) {
                     return FittedBox(
-                      fit: BoxFit.fill,
+                      fit: BoxFit.contain,
                       child: widget.valueWidget,
                     );
                   },

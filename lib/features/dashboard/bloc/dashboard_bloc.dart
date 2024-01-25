@@ -45,7 +45,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   FutureOr<void> onUnitValueChangedEvent(
       UnitValueChangedEvent event, Emitter<DashboardState> emit) {
     try {
-      List<Map<String, dynamic>> pointData = json.decode(event.data);
+      List<dynamic> pointData = json.decode(event.data);
       double totalValue = 0;
       double maxValue = 0;
       for (var element in event.units) {
