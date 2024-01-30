@@ -20,3 +20,15 @@ class UnitEditLoadingSuccessState extends UnitsEditState {
 
   UnitEditLoadingSuccessState({required this.units});
 }
+
+class UnitEditErrorState extends UnitEditActionState {
+  final ApiException apiException;
+
+  UnitEditErrorState({required this.apiException});
+}
+
+class UnitAddedState extends UnitsEditState {
+  final Unit unit;
+
+  UnitAddedState({required this.unit});
+}

@@ -8,3 +8,18 @@ class FetchUnitDataEvent extends UnitsEditEvent {
 
   FetchUnitDataEvent({required this.plantName});
 }
+
+class AddUnitEvent extends UnitsEditEvent {
+  final Plant plant;
+  final String pointId;
+  final String systemGuid;
+  final String unit;
+  final String ratedPower;
+
+  AddUnitEvent(
+      {required this.plant,
+      required this.pointId,
+      required this.systemGuid,
+      required this.unit,
+      required this.ratedPower});
+}
