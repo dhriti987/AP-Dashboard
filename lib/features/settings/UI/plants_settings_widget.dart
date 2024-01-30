@@ -15,13 +15,7 @@ class PlantsAndUnitSettings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    List<Plant> plants = [
-      Plant(name: "Mundra"),
-      Plant(name: "Raipur"),
-      Plant(name: "Raigarh"),
-      Plant(name: "Raigarh"),
-      Plant(name: "Raigarh"),
-    ];
+    List<Plant> plants = [];
     return BlocConsumer<SettingsBloc, SettingsState>(
       bloc: settingsBloc,
       listenWhen: (previous, current) => current is SettingsActionState,
@@ -32,6 +26,15 @@ class PlantsAndUnitSettings extends StatelessWidget {
         }
       },
       builder: (context, state) {
+        if (state is SettingsInitial) {
+          settingsBloc.add(PlantDataFetchEvent());
+        } else if (state is PlantLoadingState) {
+          return Center(child: CircularProgressIndicator());
+        } else if (state is PlantLoadingFailedState) {
+          return Center(child: Text("Error"));
+        } else if (state is PlantLoadingSuccessState) {
+          plants = state.plants;
+        }
         return Column(
           children: [
             SizedBox(

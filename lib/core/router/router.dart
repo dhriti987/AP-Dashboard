@@ -3,11 +3,13 @@
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:streaming_data_dashboard/features/dashboard/UI/dashboard_page.dart';
+import 'package:streaming_data_dashboard/features/dashboard/UI/unit_analysis_page.dart';
 import 'package:streaming_data_dashboard/features/home/UI/home_screen.dart';
 import 'package:streaming_data_dashboard/features/login/UI/login.dart';
 import 'package:streaming_data_dashboard/features/settings/UI/settings_page.dart';
 import 'package:streaming_data_dashboard/features/units_edit/UI/unit_edit_page.dart';
 import 'package:streaming_data_dashboard/models/plant_model.dart';
+import 'package:streaming_data_dashboard/models/unit_model.dart';
 
 class AppRouter {
   final SharedPreferences pref;
@@ -64,6 +66,18 @@ class AppRouter {
             return DashboardPage(
               // plant: Plant(name: "Mundra"),
               plant: data,
+            );
+          },
+        ),
+        GoRoute(
+          path: '/unit-analysis',
+          name: 'UnitAnalysis',
+          builder: (context, state) {
+            Unit data = state.extra as Unit;
+            // print(data);
+            return UnitAnalysisPage(
+              // plant: Plant(name: "Mundra"),
+              unit: data,
             );
           },
         ),

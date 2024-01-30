@@ -18,3 +18,19 @@ class NavigateToUnitEditPageActionState extends SettingsActionState {
 
   NavigateToUnitEditPageActionState({required this.plant});
 }
+
+class PlantInitialState extends SettingsState {}
+
+class PlantLoadingState extends SettingsState {}
+
+class PlantLoadingFailedState extends SettingsState {
+  final ApiException apiException;
+
+  PlantLoadingFailedState({required this.apiException});
+}
+
+class PlantLoadingSuccessState extends SettingsState {
+  final List<Plant> plants;
+
+  PlantLoadingSuccessState({required this.plants});
+}

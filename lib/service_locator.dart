@@ -9,6 +9,7 @@ import 'package:streaming_data_dashboard/features/home/repository/home_repositor
 import 'package:streaming_data_dashboard/features/login/bloc/login_bloc.dart';
 import 'package:streaming_data_dashboard/features/login/repository/login_repository.dart';
 import 'package:streaming_data_dashboard/features/settings/bloc/settings_bloc.dart';
+import 'package:streaming_data_dashboard/features/settings/repository/setting_repository.dart';
 import 'package:streaming_data_dashboard/features/units_edit/bloc/units_edit_bloc.dart';
 
 GetIt sl = GetIt.instance;
@@ -38,5 +39,9 @@ void setup() {
       dependsOn: [ApiService]);
   sl.registerSingletonWithDependencies<DashboardRepository>(
       () => DashboardRepository(apiService: sl()),
+      dependsOn: [ApiService]);
+
+  sl.registerSingletonWithDependencies<SettingRepository>(
+      () => SettingRepository(apiSevice: sl()),
       dependsOn: [ApiService]);
 }

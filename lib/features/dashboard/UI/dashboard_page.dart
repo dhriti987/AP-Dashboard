@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gauge_indicator/gauge_indicator.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:streaming_data_dashboard/features/dashboard/bloc/dashboard_bloc.dart';
 import 'package:streaming_data_dashboard/models/plant_model.dart';
@@ -138,7 +139,10 @@ class _DashboardPageState extends State<DashboardPage> {
                       children: units
                           .map<Widget>((unit) => UnitDataWidget(
                               unit: unit,
-                              onTap: () {},
+                              onTap: () {
+                                print("onTap");
+                                context.pushNamed("UnitAnalysis", extra: unit);
+                              },
                               unitValue: unit.unitValue))
                           .toList()
                         ..add(const SizedBox(
@@ -178,98 +182,101 @@ class _UnitDataWidgetState extends State<UnitDataWidget> {
     Size size = MediaQuery.of(context).size;
     double height = size.height / 3.7;
     double width = ((size.width / 7) * 5) / 3.4;
-    return Container(
-      height: height,
-      width: width,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: Colors.white,
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black45,
-            blurRadius: 4.0,
-            spreadRadius: 0.0,
-            offset: Offset(7.0, 7.0), // shadow direction: bottom right
-          )
-        ],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          children: [
-            Expanded(
-              flex: 1,
-              child: AnimatedRadialGauge(
-                builder: (context, child, value) {
-                  return FittedBox(
-                    fit: BoxFit.fill,
-                    child: Text(
-                      "${(value / (widget.unit.maxVoltage / 100)).toStringAsFixed(0)}%",
-                      style: TextStyle(
-                          // fontSize: height / 5,
-                          fontWeight: FontWeight.w600),
-                    ),
-                  );
-                },
-                duration: Duration(seconds: 1),
-                value: widget.unitValue,
-                axis: GaugeAxis(
-                    min: 0,
-                    max: widget.unit.maxVoltage.toDouble(),
-                    degrees: 330,
-                    progressBar: GaugeProgressBar.rounded(
-                        placement: GaugeProgressPlacement.inside,
-                        gradient: GaugeAxisGradient(
-                            colors: [Colors.red, Colors.orange, Colors.green],
-                            colorStops: [0.01, 0.15, 0.65])),
-                    segments: [
-                      GaugeSegment(
-                        from: 0,
-                        to: widget.unit.maxVoltage.toDouble() * 0.05,
-                        cornerRadius: Radius.zero,
-                      ),
-                      GaugeSegment(
-                        from: widget.unit.maxVoltage.toDouble() * 0.05,
-                        to: widget.unit.maxVoltage.toDouble() * 0.45,
-                      ),
-                      GaugeSegment(
-                          from: widget.unit.maxVoltage.toDouble() * 0.45,
-                          to: widget.unit.maxVoltage.toDouble())
-                    ],
-                    style: GaugeAxisStyle(
-                        thickness: width / 15, segmentSpacing: 4)),
-              ),
-            ),
-            Expanded(
-              flex: 1,
-              child: Column(
-                children: [
-                  Expanded(
-                    flex: 2,
-                    child: FittedBox(
+    return InkWell(
+      onTap: widget.onTap,
+      child: Container(
+        height: height,
+        width: width,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.white,
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.black45,
+              blurRadius: 4.0,
+              spreadRadius: 0.0,
+              offset: Offset(7.0, 7.0), // shadow direction: bottom right
+            )
+          ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            children: [
+              Expanded(
+                flex: 1,
+                child: AnimatedRadialGauge(
+                  builder: (context, child, value) {
+                    return FittedBox(
                       fit: BoxFit.fill,
                       child: Text(
-                        widget.unitValue.toStringAsFixed(0),
+                        "${(value / (widget.unit.maxVoltage / 100)).toStringAsFixed(0)}%",
                         style: TextStyle(
-                          fontWeight: FontWeight.bold,
+                            // fontSize: height / 5,
+                            fontWeight: FontWeight.w600),
+                      ),
+                    );
+                  },
+                  duration: Duration(seconds: 1),
+                  value: widget.unitValue,
+                  axis: GaugeAxis(
+                      min: 0,
+                      max: widget.unit.maxVoltage.toDouble(),
+                      degrees: 330,
+                      progressBar: GaugeProgressBar.rounded(
+                          placement: GaugeProgressPlacement.inside,
+                          gradient: GaugeAxisGradient(
+                              colors: [Colors.red, Colors.orange, Colors.green],
+                              colorStops: [0.01, 0.15, 0.65])),
+                      segments: [
+                        GaugeSegment(
+                          from: 0,
+                          to: widget.unit.maxVoltage.toDouble() * 0.05,
+                          cornerRadius: Radius.zero,
+                        ),
+                        GaugeSegment(
+                          from: widget.unit.maxVoltage.toDouble() * 0.05,
+                          to: widget.unit.maxVoltage.toDouble() * 0.45,
+                        ),
+                        GaugeSegment(
+                            from: widget.unit.maxVoltage.toDouble() * 0.45,
+                            to: widget.unit.maxVoltage.toDouble())
+                      ],
+                      style: GaugeAxisStyle(
+                          thickness: width / 15, segmentSpacing: 4)),
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: Column(
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: FittedBox(
+                        fit: BoxFit.fill,
+                        child: Text(
+                          widget.unitValue.toStringAsFixed(0),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: FittedBox(
-                      fit: BoxFit.fill,
-                      child: Text(
-                        widget.unit.unit,
-                        style: TextStyle(),
+                    Expanded(
+                      flex: 1,
+                      child: FittedBox(
+                        fit: BoxFit.fill,
+                        child: Text(
+                          widget.unit.unit,
+                          style: TextStyle(),
+                        ),
                       ),
-                    ),
-                  )
-                ],
-              ),
-            )
-          ],
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

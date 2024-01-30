@@ -46,7 +46,8 @@ dependencies:
   meta: ^1.9.1
   jwt_decoder: ^2.0.1
   window_manager: ^0.3.7
-  web_socket_channel: ^2.4.3
+  web_socket_channel: any
+  fl_chart: ^0.66.1
 
 dev_dependencies:
   flutter_test:

@@ -40,7 +40,6 @@ class LoginPage extends StatelessWidget {
         }
       },
       builder: (context, state) {
-        print(state.runtimeType);
         if (state is UsernameValidationFailedState) {
           usernameErrorText = state.error;
         }

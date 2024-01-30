@@ -14,3 +14,5 @@ class OnPlantClickedEvent extends SettingsEvent {
 
   OnPlantClickedEvent({required this.plant});
 }
+
+class PlantDataFetchEvent extends SettingsEvent {}

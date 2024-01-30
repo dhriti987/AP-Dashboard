@@ -23,7 +23,7 @@ class Unit {
         pointId: json['point_id'],
         systemGuid: json['system_guid'],
         plant: json['plant_name'],
-        unit: json['code'],
+        unit: json['unit'],
         code: json['code'],
         maxVoltage: json["max_voltage"]);
   }
