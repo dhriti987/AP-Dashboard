@@ -7,6 +7,7 @@ class UnitEditRepository {
   final ApiService _apiService;
   final unitByPlantURL = "/dashboard/unit/";
   final unitAddUrl = "";
+  final unitDeleteUrl = "";
 
   UnitEditRepository({required ApiService apiService})
       : _apiService = apiService;
@@ -43,6 +44,17 @@ class UnitEditRepository {
       throw ApiException(
           exception: e,
           error: ["Unknown Error", "Unable to add data from server"]);
+    }
+  }
+
+  Future<void> deleteUnit(int unitId) async {
+    final api = _apiService.getApi();
+    try {
+      await api.delete(unitDeleteUrl + unitId.toString());
+    } on DioException catch (e) {
+      print(e);
+      throw ApiException(
+          exception: e, error: ["Delete Failed", "Unable to Delete the Unit"]);
     }
   }
 }

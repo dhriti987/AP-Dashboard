@@ -23,3 +23,9 @@ class AddUnitEvent extends UnitsEditEvent {
       required this.unit,
       required this.ratedPower});
 }
+
+class DeleteUnitEvent extends UnitsEditEvent {
+  final Unit unit;
+
+  DeleteUnitEvent({required this.unit});
+}

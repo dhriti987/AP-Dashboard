@@ -32,3 +32,9 @@ class UnitAddedState extends UnitsEditState {
 
   UnitAddedState({required this.unit});
 }
+
+class UnitDeleteSuccessState extends UnitsEditState {
+  final Unit unit;
+
+  UnitDeleteSuccessState({required this.unit});
+}

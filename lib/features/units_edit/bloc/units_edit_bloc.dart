@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:streaming_data_dashboard/core/exceptions/api_exceptions.dart';
-import 'package:streaming_data_dashboard/features/dashboard/repository/dashboard_repository.dart';
 import 'package:streaming_data_dashboard/features/units_edit/repository/unit_edit_repository.dart';
 import 'package:streaming_data_dashboard/models/plant_model.dart';
 import 'package:streaming_data_dashboard/models/unit_model.dart';
@@ -21,6 +20,7 @@ class UnitsEditBloc extends Bloc<UnitsEditEvent, UnitsEditState> {
     });
     on<FetchUnitDataEvent>(onFetchUnitDataEvent);
     on<AddUnitEvent>(onAddUnitEvent);
+    on<DeleteUnitEvent>(onDeleteUnitEvent);
   }
 
   FutureOr<void> onFetchUnitDataEvent(
@@ -45,6 +45,16 @@ class UnitsEditBloc extends Bloc<UnitsEditEvent, UnitsEditState> {
           "${event.plant.name}_${event.unit}",
           event.ratedPower);
       emit(UnitAddedState(unit: data));
+    } on ApiException catch (e) {
+      emit(UnitEditErrorState(apiException: e));
+    }
+  }
+
+  FutureOr<void> onDeleteUnitEvent(
+      DeleteUnitEvent event, Emitter<UnitsEditState> emit) async {
+    try {
+      await _unitEditRepository.deleteUnit(event.unit.id);
+      emit(UnitDeleteSuccessState(unit: event.unit));
     } on ApiException catch (e) {
       emit(UnitEditErrorState(apiException: e));
     }
