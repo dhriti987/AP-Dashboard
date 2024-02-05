@@ -25,7 +25,7 @@ class Unit {
         plant: json['plant_name'],
         unit: json['unit'],
         code: json['code'],
-        maxVoltage: json["max_voltage"]);
+        maxVoltage: json["max_rated_power"]);
   }
 
   static List<Unit> listFromJson(List<dynamic> data) =>

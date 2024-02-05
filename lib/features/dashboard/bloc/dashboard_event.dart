@@ -15,3 +15,9 @@ class UnitValueChangedEvent extends DashboardEvent {
 
   UnitValueChangedEvent({required this.units, required this.data});
 }
+
+class FetchDatapointsEvent extends DashboardEvent {
+  final int unitId;
+
+  FetchDatapointsEvent({required this.unitId});
+}

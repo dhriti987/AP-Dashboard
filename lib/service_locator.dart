@@ -4,6 +4,7 @@ import 'package:streaming_data_dashboard/core/router/router.dart';
 import 'package:streaming_data_dashboard/core/services/api_service.dart';
 import 'package:streaming_data_dashboard/features/dashboard/bloc/dashboard_bloc.dart';
 import 'package:streaming_data_dashboard/features/dashboard/repository/dashboard_repository.dart';
+import 'package:streaming_data_dashboard/features/dashboard/repository/unit_analysis_repository.dart';
 import 'package:streaming_data_dashboard/features/home/bloc/home_bloc.dart';
 import 'package:streaming_data_dashboard/features/home/repository/home_repository.dart';
 import 'package:streaming_data_dashboard/features/login/bloc/login_bloc.dart';
@@ -42,6 +43,10 @@ void setup() {
       dependsOn: [ApiService]);
 
   sl.registerSingletonWithDependencies<SettingRepository>(
-      () => SettingRepository(apiSevice: sl()),
+      () => SettingRepository(apiService: sl()),
+      dependsOn: [ApiService]);
+
+  sl.registerSingletonWithDependencies<UnitAnalysisRepository>(
+      () => UnitAnalysisRepository(apiService: sl()),
       dependsOn: [ApiService]);
 }

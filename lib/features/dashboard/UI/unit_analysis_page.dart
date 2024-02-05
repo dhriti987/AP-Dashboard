@@ -1,34 +1,40 @@
+import 'dart:math';
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:streaming_data_dashboard/features/dashboard/UI/dashboard_page.dart';
+import 'package:streaming_data_dashboard/features/dashboard/bloc/dashboard_bloc.dart';
 import 'package:streaming_data_dashboard/models/unit_model.dart';
 
 class UnitAnalysisPage extends StatefulWidget {
-  const UnitAnalysisPage({super.key, required this.unit});
+  const UnitAnalysisPage({super.key, required this.unit, required this.bloc});
 
   final Unit unit;
+  final DashboardBloc bloc;
 
   @override
   State<UnitAnalysisPage> createState() => _UnitAnalysisPageState();
 }
 
 class _UnitAnalysisPageState extends State<UnitAnalysisPage> {
-  List<List<double>> points = [
-    [232.6, 2.7],
-    [312.3, 3.3],
-    [212.3, 6.7],
-    [27.8, 8.34],
-    [222.4, 22.5],
-  ];
+  double total = 0;
+  double max_value = 0;
+  double min_value = 0;
 
-  List<Map<String, dynamic>> tempPoints = [
-    {"point_value": 198.69, "sample_time": "12:08"},
-    {"point_value": 198.52, "sample_time": "15:46"},
-    {"point_value": 198.38, "sample_time": "17:19"},
-    {"point_value": 197.54, "sample_time": "17:52"},
-    {"point_value": 198.1, "sample_time": "18:04"}
-  ];
+  List<Map<String, dynamic>> dataPoints = [];
+
+  @override
+  void initState() {
+    Future.delayed(Duration(seconds: 2), () {
+      widget.bloc.add(FetchDatapointsEvent(unitId: widget.unit.id));
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,7 +42,105 @@ class _UnitAnalysisPageState extends State<UnitAnalysisPage> {
           centerTitle: true,
           title: Text(widget.unit.unit),
         ),
-        body: MyLineChartWidget(points: tempPoints));
+        body: BlocBuilder<DashboardBloc, DashboardState>(
+          bloc: widget.bloc,
+          builder: (context, state) {
+            if (state is UnitAnalysisLodingState) {
+              return Center(child: CircularProgressIndicator());
+            } else if (state is UnitAnalysisLodingFailedState) {
+              return Center(child: Text("Error"));
+            } else if (state is UnitAnalysisLodingSuccessState) {
+              dataPoints = state.dataPoints;
+              total = state.total;
+              max_value = state.max_value;
+              min_value = state.min_value;
+            }
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  Expanded(
+                      child: Row(
+                    children: [
+                      BlocBuilder<DashboardBloc, DashboardState>(
+                        bloc: widget.bloc,
+                        builder: (context, state) {
+                          Unit? unit;
+                          if (state is DashboardLoadingSuccessState) {
+                            unit = state.units.singleWhere(
+                                (element) => element.id == widget.unit.id);
+                            dataPoints.add({
+                              "point_value": unit.unitValue,
+                              "sample_time":
+                                  "${DateTime.now().hour}:${DateTime.now().minute}"
+                            });
+                            total += unit.unitValue;
+                            max_value = max(max_value, unit.unitValue);
+                            min_value = min(min_value, unit.unitValue);
+                          }
+                          return Expanded(
+                            flex: 1,
+                            child: UnitDataWidget(
+                                unit: widget.unit,
+                                onTap: () {},
+                                unitValue: unit?.unitValue ?? 0),
+                          );
+                        },
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: UnitDataWidget(
+                          unit: widget.unit,
+                          onTap: () {},
+                          unitValue: (total / dataPoints.length),
+                          isUnit: false,
+                          bgColor: Colors.red[200],
+                          title: "AVG",
+                        ),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: UnitDataWidget(
+                          unit: widget.unit,
+                          onTap: () {},
+                          unitValue: max_value,
+                          isUnit: false,
+                          bgColor: Colors.blue[200],
+                          title: "MAX",
+                        ),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: UnitDataWidget(
+                          unit: widget.unit,
+                          onTap: () {},
+                          unitValue: min_value,
+                          isUnit: false,
+                          bgColor: Colors.indigo[200],
+                          title: "MIN",
+                        ),
+                      ),
+                    ],
+                  )),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Expanded(
+                      flex: 6, child: MyLineChartWidget(points: dataPoints)),
+                ],
+              ),
+            );
+          },
+        ));
   }
 }
 
@@ -152,8 +256,10 @@ class MyLineChartWidget extends StatelessWidget {
                       interval: 1,
                       reservedSize: 30)),
               topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-              rightTitles:
-                  AxisTitles(sideTitles: SideTitles(showTitles: false)),
+              rightTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                showTitles: false,
+              )),
               leftTitles: AxisTitles(
                   axisNameSize: 50,
                   axisNameWidget: Text(

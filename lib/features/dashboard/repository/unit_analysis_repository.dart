@@ -1,20 +1,19 @@
 import 'package:dio/dio.dart';
 import 'package:streaming_data_dashboard/core/exceptions/api_exceptions.dart';
 import 'package:streaming_data_dashboard/core/services/api_service.dart';
-import 'package:streaming_data_dashboard/models/plant_model.dart';
 
-class SettingRepository {
+class UnitAnalysisRepository {
   final ApiService _apiService;
-  final listPlantsURL = "/dashboard/plant/";
+  final unit24hrURL = "/dashboard/unit-time-series?unit=";
 
-  SettingRepository({required ApiService apiService})
+  UnitAnalysisRepository({required ApiService apiService})
       : _apiService = apiService;
 
-  Future<List<Plant>> getAllPlants() async {
+  Future<List<dynamic>> getUnit24hrData(int id) async {
     final api = _apiService.getApi();
     try {
-      var response = await api.get(listPlantsURL);
-      return Plant.listFromJson(response.data);
+      var response = await api.get(unit24hrURL + id.toString());
+      return response.data["unit_data"];
     } on DioException catch (e) {
       print(e);
       throw ApiException(

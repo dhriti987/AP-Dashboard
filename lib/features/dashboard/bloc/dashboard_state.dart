@@ -27,3 +27,24 @@ class DashboardLoadingSuccessState extends DashboardState {
       required this.totalValue,
       required this.maxValue});
 }
+
+class UnitAnalysisLodingState extends DashboardState {}
+
+class UnitAnalysisLodingSuccessState extends DashboardState {
+  final List<Map<String, dynamic>> dataPoints;
+  final double total;
+  final double max_value;
+  final double min_value;
+
+  UnitAnalysisLodingSuccessState(
+      {required this.dataPoints,
+      required this.total,
+      required this.max_value,
+      required this.min_value});
+}
+
+class UnitAnalysisLodingFailedState extends DashboardState {
+  final ApiException apiException;
+
+  UnitAnalysisLodingFailedState({required this.apiException});
+}

@@ -82,7 +82,6 @@ class _UnitEditPageState extends State<UnitEditPage> {
         builder: (context, state) {
           if (state is UnitsEditInitial) {
             unitsEditBloc.add(FetchUnitDataEvent(plantName: widget.plant.name));
-            print(state.runtimeType);
           } else if (state is UnitEditLoadingState) {
             return Center(child: CircularProgressIndicator());
           } else if (state is UnitEditLoadingSuccessState) {

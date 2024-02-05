@@ -23,6 +23,7 @@ class HomePage extends StatelessWidget {
       Plant(name: "Raigarh"),
       Plant(name: "Raigarh"),
     ];
+
     return BlocConsumer<HomeBloc, HomeState>(
       bloc: homeBloc,
       listenWhen: (previous, current) => current is HomeActionState,
@@ -54,17 +55,23 @@ class HomePage extends StatelessWidget {
           );
         }
         return Scaffold(
-          appBar: AppBar(actions: [
-            IconButton(
-              onPressed: () {
-                homeBloc.add(SettingsButtonOnClickedEvent());
-              },
-              icon: const Icon(
-                Icons.settings_suggest_outlined,
+          appBar: AppBar(
+              centerTitle: true,
+              title: Text(
+                "APL Dashboard",
+                style: TextStyle(fontWeight: FontWeight.w800, fontSize: 30),
               ),
-              iconSize: 40,
-            )
-          ]),
+              actions: [
+                IconButton(
+                  onPressed: () {
+                    homeBloc.add(SettingsButtonOnClickedEvent());
+                  },
+                  icon: const Icon(
+                    Icons.settings_suggest_outlined,
+                  ),
+                  iconSize: 40,
+                )
+              ]),
           body: body,
         );
       },
@@ -72,6 +79,17 @@ class HomePage extends StatelessWidget {
   }
 
   SizedBox loadedBody(List<Plant> plants) {
+    Map<String, String> images = {
+      "Mundra":
+          "https://www.adanipower.com/-/media/Project/Power/OperationalPowerPlants/mundra/Hi-tech-Infra/mundra2",
+      "Tirora":
+          "https://www.adanipower.com/-/media/Project/Power/OperationalPowerPlants/Tiroda/Bannner/Tirora_banner_.jpg?la=en&hash=222D0E4294FA127360E3407E5BE9843B",
+      "Raipur":
+          "https://www.adanipower.com/-/media/Project/Power/OperationalPowerPlants/Raipur-Chhattisgarh/Raipur3.jpg?la=en&hash=A10A62355B3FD346119C108E7A493CE8",
+      "Raigarh":
+          "https://www.adanipower.com/-/media/Project/Power/OperationalPowerPlants/Kawai/Hi-tech-Infra/kawai_1"
+    };
+
     return SizedBox(
       width: double.maxFinite,
       child: Padding(
@@ -85,6 +103,7 @@ class HomePage extends StatelessWidget {
             // crossAxisAlignment: WrapCrossAlignment.start,
             children: plants
                 .map<Widget>((plant) => PlantItemWidget(
+                      image: images[plant.name]!,
                       plant: plant,
                       onTap: () {
                         homeBloc.add(OnPlantClickedEvent(plant: plant));
@@ -106,10 +125,12 @@ class PlantItemWidget extends StatefulWidget {
   const PlantItemWidget({
     super.key,
     required this.plant,
+    required this.image,
     required this.onTap,
   });
 
   final Plant plant;
+  final String image;
   final void Function() onTap;
 
   @override
@@ -157,9 +178,8 @@ class _PlantItemWidgetState extends State<PlantItemWidget>
           width: width,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
-            image: const DecorationImage(
-              image: NetworkImage(
-                  "https://www.adanipower.com/-/media/Project/Power/OperationalPowerPlants/mundra/Hi-tech-Infra/mundra2"),
+            image: DecorationImage(
+              image: NetworkImage(widget.image),
               fit: BoxFit.cover,
             ),
             boxShadow: const [

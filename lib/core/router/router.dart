@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:streaming_data_dashboard/features/dashboard/UI/dashboard_page.dart';
 import 'package:streaming_data_dashboard/features/dashboard/UI/unit_analysis_page.dart';
+import 'package:streaming_data_dashboard/features/dashboard/bloc/dashboard_bloc.dart';
 import 'package:streaming_data_dashboard/features/home/UI/home_screen.dart';
 import 'package:streaming_data_dashboard/features/login/UI/login.dart';
 import 'package:streaming_data_dashboard/features/settings/UI/settings_page.dart';
@@ -73,11 +74,14 @@ class AppRouter {
           path: '/unit-analysis',
           name: 'UnitAnalysis',
           builder: (context, state) {
-            Unit data = state.extra as Unit;
+            Unit data = (state.extra as Map)["unit"] as Unit;
+            DashboardBloc bloc =
+                (state.extra as Map)["dashboard_bloc"] as DashboardBloc;
             // print(data);
             return UnitAnalysisPage(
               // plant: Plant(name: "Mundra"),
               unit: data,
+              bloc: bloc,
             );
           },
         ),
