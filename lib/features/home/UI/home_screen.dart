@@ -16,13 +16,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Size size = MediaQuery.of(context).size;
-    List<Plant> plants = [
-      Plant(name: "Mundra"),
-      Plant(name: "Raipur"),
-      Plant(name: "Raigarh"),
-      Plant(name: "Raigarh"),
-      Plant(name: "Raigarh"),
-    ];
+    List<Plant> plants = [];
 
     return BlocConsumer<HomeBloc, HomeState>(
       bloc: homeBloc,

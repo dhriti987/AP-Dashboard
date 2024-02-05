@@ -12,6 +12,7 @@ import 'package:streaming_data_dashboard/features/login/repository/login_reposit
 import 'package:streaming_data_dashboard/features/settings/bloc/settings_bloc.dart';
 import 'package:streaming_data_dashboard/features/settings/repository/setting_repository.dart';
 import 'package:streaming_data_dashboard/features/units_edit/bloc/units_edit_bloc.dart';
+import 'package:streaming_data_dashboard/features/units_edit/repository/unit_edit_repository.dart';
 
 GetIt sl = GetIt.instance;
 
@@ -48,5 +49,8 @@ void setup() {
 
   sl.registerSingletonWithDependencies<UnitAnalysisRepository>(
       () => UnitAnalysisRepository(apiService: sl()),
+      dependsOn: [ApiService]);
+  sl.registerSingletonWithDependencies<UnitEditRepository>(
+      () => UnitEditRepository(apiService: sl()),
       dependsOn: [ApiService]);
 }
