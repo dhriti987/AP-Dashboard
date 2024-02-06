@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gauge_indicator/gauge_indicator.dart';
 import 'package:go_router/go_router.dart';
@@ -51,6 +49,7 @@ class _DashboardPageState extends State<DashboardPage> {
   void dispose() {
     // TODO: implement dispose
     channel.sink.close();
+    dashboardBloc.close();
     super.dispose();
   }
 
@@ -87,8 +86,16 @@ class _DashboardPageState extends State<DashboardPage> {
       // ),
       body: BlocConsumer<DashboardBloc, DashboardState>(
         bloc: dashboardBloc,
+        listenWhen: (previous, current) => current is DashboardActionState,
+        buildWhen: (previous, current) => current is! DashboardActionState,
         listener: (context, state) {
           // TODO: implement listener
+          if (state is NavigateToUnitAnalysisPageState) {
+            context.pushNamed("UnitAnalysis", extra: {
+              "unit": units[state.unit],
+              "dashboard_bloc": dashboardBloc
+            });
+          }
         },
         builder: (context, state) {
           double frequency = 0;
@@ -164,10 +171,9 @@ class _DashboardPageState extends State<DashboardPage> {
                           .map<Widget>((unit) => UnitDataWidget(
                               unit: unit,
                               onTap: () {
-                                context.pushNamed("UnitAnalysis", extra: {
-                                  "unit": unit,
-                                  "dashboard_bloc": dashboardBloc
-                                });
+                                dashboardBloc.add(
+                                    NavigateToUnitAnalysisPageEvent(
+                                        unit: units.indexOf(unit)));
                               },
                               unitValue: unit.unitValue))
                           .toList()

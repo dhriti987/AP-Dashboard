@@ -45,70 +45,81 @@ class _SettingsPageState extends State<SettingsPage> {
             children: [
               Expanded(
                 flex: 2,
-                child: ListView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        settingsBloc.add(TabChangeEvent(index: 0));
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: (currentSettings == 0)
-                            ? Colors.grey.shade400
-                            : Colors.transparent,
-                        elevation: 0,
-                        foregroundColor: Colors.black,
-                        fixedSize: Size.fromHeight(
-                          size.height / 20,
+                    ListView(
+                      shrinkWrap: true,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            settingsBloc.add(TabChangeEvent(index: 0));
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: (currentSettings == 0)
+                                ? Colors.grey.shade400
+                                : Colors.transparent,
+                            elevation: 0,
+                            foregroundColor: Colors.black,
+                            fixedSize: Size.fromHeight(
+                              size.height / 20,
+                            ),
+                            shadowColor: Colors.black12,
+                            alignment: Alignment.centerLeft,
+                          ),
+                          child: Text(
+                            "Client Credentials",
+                            style: TextStyle(fontSize: size.height / 50),
+                          ),
                         ),
-                        shadowColor: Colors.black12,
-                        alignment: Alignment.centerLeft,
-                      ),
-                      child: Text(
-                        "Client Credentials",
-                        style: TextStyle(fontSize: size.height / 50),
-                      ),
+                        ElevatedButton(
+                          onPressed: () {
+                            settingsBloc.add(TabChangeEvent(index: 1));
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: (currentSettings == 1)
+                                ? Colors.grey.shade400
+                                : Colors.transparent,
+                            elevation: 0,
+                            foregroundColor: Colors.black,
+                            fixedSize: Size.fromHeight(
+                              size.height / 20,
+                            ),
+                            shadowColor: Colors.black12,
+                            alignment: Alignment.centerLeft,
+                          ),
+                          child: Text(
+                            "Plants",
+                            style: TextStyle(fontSize: size.height / 50),
+                          ),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            settingsBloc.add(TabChangeEvent(index: 2));
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: (currentSettings == 2)
+                                ? Colors.grey.shade400
+                                : Colors.transparent,
+                            elevation: 0,
+                            foregroundColor: Colors.black,
+                            fixedSize: Size.fromHeight(
+                              size.height / 20,
+                            ),
+                            shadowColor: Colors.black12,
+                            alignment: Alignment.centerLeft,
+                          ),
+                          child: Text(
+                            "Users",
+                            style: TextStyle(fontSize: size.height / 50),
+                          ),
+                        ),
+                      ],
                     ),
-                    ElevatedButton(
-                      onPressed: () {
-                        settingsBloc.add(TabChangeEvent(index: 1));
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: (currentSettings == 1)
-                            ? Colors.grey.shade400
-                            : Colors.transparent,
-                        elevation: 0,
-                        foregroundColor: Colors.black,
-                        fixedSize: Size.fromHeight(
-                          size.height / 20,
-                        ),
-                        shadowColor: Colors.black12,
-                        alignment: Alignment.centerLeft,
-                      ),
-                      child: Text(
-                        "Plants",
-                        style: TextStyle(fontSize: size.height / 50),
-                      ),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        settingsBloc.add(TabChangeEvent(index: 2));
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: (currentSettings == 2)
-                            ? Colors.grey.shade400
-                            : Colors.transparent,
-                        elevation: 0,
-                        foregroundColor: Colors.black,
-                        fixedSize: Size.fromHeight(
-                          size.height / 20,
-                        ),
-                        shadowColor: Colors.black12,
-                        alignment: Alignment.centerLeft,
-                      ),
-                      child: Text(
-                        "Users",
-                        style: TextStyle(fontSize: size.height / 50),
-                      ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 20),
+                      child: ElevatedButton(
+                          onPressed: () {}, child: const Text("Logout")),
                     ),
                   ],
                 ),

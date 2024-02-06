@@ -21,3 +21,9 @@ class FetchDatapointsEvent extends DashboardEvent {
 
   FetchDatapointsEvent({required this.unitId});
 }
+
+class NavigateToUnitAnalysisPageEvent extends DashboardEvent {
+  final int unit;
+
+  NavigateToUnitAnalysisPageEvent({required this.unit});
+}

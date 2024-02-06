@@ -22,6 +22,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     on<FetchUnitDataEvent>(onFetchUnitDataEvent);
     on<UnitValueChangedEvent>(onUnitValueChangedEvent);
     on<FetchDatapointsEvent>(onFetchDatapointsEvent);
+    on<NavigateToUnitAnalysisPageEvent>(onNavigateToUnitAnalysisPageEvent);
   }
 
   FutureOr<void> onFetchUnitDataEvent(
@@ -50,19 +51,19 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   FutureOr<void> onUnitValueChangedEvent(
       UnitValueChangedEvent event, Emitter<DashboardState> emit) {
     try {
-      List<dynamic> pointData = json.decode(event.data);
+      Map<String, dynamic> pointData = json.decode(event.data);
       double totalValue = 0;
       double maxValue = 0;
       for (var element in event.units) {
-        final index =
-            pointData.indexWhere((e) => e["pointId"] == element.pointId);
-        element.unitValue = pointData[index]["pointValues"];
+        final index = pointData["data"]
+            .indexWhere((e) => e["pointId"] == element.pointId);
+        element.unitValue = pointData["data"][index]["pointValues"];
         totalValue += element.unitValue;
         maxValue += element.maxVoltage;
       }
       emit(DashboardLoadingSuccessState(
           units: event.units,
-          frequency: 50.1,
+          frequency: pointData["frequency"],
           totalValue: totalValue,
           maxValue: maxValue));
     } catch (e) {
@@ -74,26 +75,35 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       FetchDatapointsEvent event, Emitter<DashboardState> emit) async {
     emit(UnitAnalysisLodingState());
     try {
-      List<dynamic> data =
+      Map<String, dynamic> data =
           await _unitAnalysisRepository.getUnit24hrData(event.unitId);
+      List<dynamic> unitData = data["unit_data"];
       double total = 0;
-      double min_power = double.infinity;
-      double max_power = double.negativeInfinity;
-      List<Map<String, dynamic>> converted_data = data.map((e) {
+      double minPower = double.infinity;
+      double maxPower = double.negativeInfinity;
+      List<Map<String, dynamic>> convertedData = unitData.map((e) {
         var element = e as Map<String, dynamic>;
         total += element['point_value'];
-        min_power = min(min_power, element['point_value']);
-        max_power = max(max_power, element['point_value']);
+        minPower = min(minPower, element['point_value']);
+        maxPower = max(maxPower, element['point_value']);
         return element;
       }).toList();
 
       emit(UnitAnalysisLodingSuccessState(
-          dataPoints: converted_data,
+          frequencyPoints: (data["frequency"] as List<dynamic>)
+              .map((e) => e as Map<String, dynamic>)
+              .toList(),
+          dataPoints: convertedData,
           total: total,
-          max_value: max_power,
-          min_value: min_power));
+          max_value: maxPower,
+          min_value: minPower));
     } catch (e) {
       print(e);
     }
+  }
+
+  FutureOr<void> onNavigateToUnitAnalysisPageEvent(
+      NavigateToUnitAnalysisPageEvent event, Emitter<DashboardState> emit) {
+    emit(NavigateToUnitAnalysisPageState(unit: event.unit));
   }
 }

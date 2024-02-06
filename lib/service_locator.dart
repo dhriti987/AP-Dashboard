@@ -2,6 +2,7 @@ import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:streaming_data_dashboard/core/router/router.dart';
 import 'package:streaming_data_dashboard/core/services/api_service.dart';
+import 'package:streaming_data_dashboard/core/settings/app_settings.dart';
 import 'package:streaming_data_dashboard/features/dashboard/bloc/dashboard_bloc.dart';
 import 'package:streaming_data_dashboard/features/dashboard/repository/dashboard_repository.dart';
 import 'package:streaming_data_dashboard/features/dashboard/repository/unit_analysis_repository.dart';
@@ -22,6 +23,9 @@ void setup() {
   sl.registerSingletonWithDependencies<ApiService>(() => ApiService(pref: sl()),
       dependsOn: [SharedPreferences]);
   sl.registerSingletonWithDependencies<AppRouter>(() => AppRouter(pref: sl()),
+      dependsOn: [SharedPreferences]);
+  sl.registerSingletonWithDependencies<AppSettings>(
+      () => AppSettings(sharedPreferences: sl()),
       dependsOn: [SharedPreferences]);
 
   //Blocs

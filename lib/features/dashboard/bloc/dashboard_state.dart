@@ -32,6 +32,7 @@ class UnitAnalysisLodingState extends DashboardState {}
 
 class UnitAnalysisLodingSuccessState extends DashboardState {
   final List<Map<String, dynamic>> dataPoints;
+  final List<Map<String, dynamic>> frequencyPoints;
   final double total;
   final double max_value;
   final double min_value;
@@ -40,11 +41,18 @@ class UnitAnalysisLodingSuccessState extends DashboardState {
       {required this.dataPoints,
       required this.total,
       required this.max_value,
-      required this.min_value});
+      required this.min_value,
+      required this.frequencyPoints});
 }
 
 class UnitAnalysisLodingFailedState extends DashboardState {
   final ApiException apiException;
 
   UnitAnalysisLodingFailedState({required this.apiException});
+}
+
+class NavigateToUnitAnalysisPageState extends DashboardActionState {
+  final int unit;
+
+  NavigateToUnitAnalysisPageState({required this.unit});
 }
