@@ -72,7 +72,9 @@ class UsersSettings extends StatelessWidget {
               showDialog(
                 context: context,
                 builder: (context) {
-                  return UserDialog();
+                  return UserDialog(
+                    settingsBloc: settingsBloc,
+                  );
                 },
               );
             } else if (state is OpenEditUserDialogState) {
@@ -82,6 +84,7 @@ class UsersSettings extends StatelessWidget {
                   return UserDialog(
                     isEditUserDialog: true,
                     user: state.user,
+                    settingsBloc: settingsBloc,
                   );
                 },
               );
