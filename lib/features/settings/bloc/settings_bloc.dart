@@ -82,6 +82,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
           event.contactNo,
           event.password,
           event.isAdmin);
+      emit(AddUserSuccessState(user: data));
     } on ApiException catch (e) {
       emit(UsersLoadingFailedState(apiException: e));
     }
