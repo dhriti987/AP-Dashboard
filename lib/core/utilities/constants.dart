@@ -1,4 +1,4 @@
-var plant_dictionary = {
+var plantDictionary = {
   'Mundra':
       'https://www.adanipower.com/-/media/Project/Power/OperationalPowerPlants/mundra/Bannner/mundra_banner1.jpg',
   'Tirora':

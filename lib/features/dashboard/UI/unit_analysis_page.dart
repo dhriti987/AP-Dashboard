@@ -1,9 +1,7 @@
 import 'dart:math';
 
 import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:streaming_data_dashboard/features/dashboard/UI/dashboard_page.dart';
@@ -221,13 +219,12 @@ class MyLineChartWidget extends StatelessWidget {
                           ? []
                           : [
                               TextSpan(
-                                text: "TIME " +
-                                    DateFormat("HH:mm").format(DateTime.now()
+                                text: "TIME ${DateFormat("HH:mm").format(DateTime.now()
                                         .copyWith(
                                             hour: flSpot.x.floor(),
                                             minute:
                                                 (flSpot.x.remainder(1.0) * 60)
-                                                    .floor())),
+                                                    .floor()))}",
                                 // "${flSpot.x.floor()}:${(flSpot.x.remainder(1.0) * 60).floor()}",
                                 style: const TextStyle(
                                   color: Colors.black,
@@ -355,7 +352,7 @@ class MyLineChartWidget extends StatelessWidget {
     );
     Widget text;
     if (value.toInt() % 20 == 0) {
-      text = Text('${value}', style: style);
+      text = Text('$value', style: style);
     } else {
       text = const Text('', style: style);
     }

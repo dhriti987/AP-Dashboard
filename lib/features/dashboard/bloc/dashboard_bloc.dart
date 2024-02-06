@@ -14,8 +14,8 @@ part 'dashboard_event.dart';
 part 'dashboard_state.dart';
 
 class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
-  DashboardRepository _dashboardRepository = sl.get<DashboardRepository>();
-  UnitAnalysisRepository _unitAnalysisRepository =
+  final DashboardRepository _dashboardRepository = sl.get<DashboardRepository>();
+  final UnitAnalysisRepository _unitAnalysisRepository =
       sl.get<UnitAnalysisRepository>();
   DashboardBloc() : super(DashboardInitial()) {
     on<DashboardEvent>((event, emit) {});
@@ -32,12 +32,10 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       var data = await _dashboardRepository.getAllUnitsByPlant(event.plantName);
       double totalValue = 0;
       double maxValue = 0;
-      data.forEach(
-        (element) {
+      for (var element in data) {
           totalValue += element.unitValue;
           maxValue += element.maxVoltage;
-        },
-      );
+        }
       emit(DashboardLoadingSuccessState(
           units: data,
           frequency: 0,

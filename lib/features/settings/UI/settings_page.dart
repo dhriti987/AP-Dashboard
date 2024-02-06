@@ -18,7 +18,7 @@ class _SettingsPageState extends State<SettingsPage> {
   final List<Widget> settingWidgets = [
     const ClientCredentialSettings(),
     PlantsAndUnitSettings(),
-    UsersSettings(),
+    const UsersSettings(),
   ];
 
   final SettingsBloc settingsBloc = sl.get<SettingsBloc>();

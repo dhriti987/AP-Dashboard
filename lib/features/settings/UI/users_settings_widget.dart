@@ -94,13 +94,13 @@ class UsersSettings extends StatelessWidget {
             if (state is SettingsInitial) {
               settingsBloc.add(UserDataFetchEvent());
             } else if (state is UsersLoadingState) {
-              return Expanded(
+              return const Expanded(
                   child: Center(child: CircularProgressIndicator()));
             } else if (state is UsersLoadingFailedState) {
               return Center(
                   child: Text(
                 "${state.apiException.error.first} \n ${state.apiException.error.last}",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
               ));
             } else if (state is UsersLoadingSuccessState) {
               users = state.users;
@@ -111,7 +111,7 @@ class UsersSettings extends StatelessWidget {
             }
             return Card(
               child: DataTable(
-                columns: [
+                columns: const [
                   DataColumn(label: Text("Employee ID")),
                   DataColumn(label: Text("User")),
                   DataColumn(label: Text("Contact")),
@@ -153,7 +153,7 @@ class UsersSettings extends StatelessWidget {
                           )),
                         ]))
                     .toList(),
-                headingTextStyle: TextStyle(
+                headingTextStyle: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w700,
                     color: Colors.black),

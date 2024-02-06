@@ -12,7 +12,7 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 import '../../../models/unit_model.dart';
 
 class DashboardPage extends StatefulWidget {
-  DashboardPage({super.key, required this.plant});
+  const DashboardPage({super.key, required this.plant});
 
   final Plant plant;
 
@@ -40,7 +40,7 @@ class _DashboardPageState extends State<DashboardPage> {
     final SharedPreferences sharedPreferences = sl.get<SharedPreferences>();
     final token = sharedPreferences.getString("accessToken");
     final wsUrl = Uri.parse(
-        'ws://127.0.0.1:8000/unit_data/?token=${token}&plant=${widget.plant.name}');
+        'ws://127.0.0.1:8000/unit_data/?token=$token&plant=${widget.plant.name}');
     channel = WebSocketChannel.connect(wsUrl);
 
     await channel.ready;
@@ -76,7 +76,7 @@ class _DashboardPageState extends State<DashboardPage> {
                     child: Text(
                       DateFormat("dd-MM-yyyy \n HH:mm:ss")
                           .format(DateTime.now()),
-                      style: TextStyle(fontWeight: FontWeight.w800),
+                      style: const TextStyle(fontWeight: FontWeight.w800),
                     ));
               },
             ),
@@ -105,7 +105,7 @@ class _DashboardPageState extends State<DashboardPage> {
           if (state is DashboardInitial) {
             dashboardBloc.add(FetchUnitDataEvent(plantName: widget.plant.name));
           } else if (state is DashboardLoadingState) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (state is DashboardLoadingSuccessState) {
             units = state.units;
             frequency = state.frequency;
@@ -113,7 +113,7 @@ class _DashboardPageState extends State<DashboardPage> {
             maxValue = state.maxValue;
           }
           return Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               gradient: LinearGradient(colors: [
                 Color(0xaa0B74B0),
                 Color(0xaa75479C),
@@ -140,7 +140,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                     style: TextStyle(fontSize: height / 50))
                               ])),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 20,
                         ),
                         UnitData2Widget(
@@ -149,7 +149,7 @@ class _DashboardPageState extends State<DashboardPage> {
                           maxValue: maxValue,
                           valueWidget: Text(
                             totalValue.toStringAsFixed(0),
-                            style: TextStyle(
+                            style: const TextStyle(
                                 // fontSize: height / 5,
                                 fontWeight: FontWeight.w600),
                           ),
@@ -157,7 +157,7 @@ class _DashboardPageState extends State<DashboardPage> {
                       ],
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 10,
                   ),
                   Expanded(
@@ -251,19 +251,19 @@ class _UnitDataWidgetState extends State<UnitDataWidget> {
                             fit: BoxFit.fill,
                             child: Text(
                               "${(value / (widget.unit.maxVoltage / 100)).toStringAsFixed(0)}%",
-                              style: TextStyle(
+                              style: const TextStyle(
                                   // fontSize: height / 5,
                                   fontWeight: FontWeight.w600),
                             ),
                           );
                         },
-                        duration: Duration(seconds: 1),
+                        duration: const Duration(seconds: 1),
                         value: widget.unitValue,
                         axis: GaugeAxis(
                             min: 0,
                             max: widget.unit.maxVoltage.toDouble(),
                             degrees: 330,
-                            progressBar: GaugeProgressBar.rounded(
+                            progressBar: const GaugeProgressBar.rounded(
                                 placement: GaugeProgressPlacement.inside,
                                 gradient: GaugeAxisGradient(colors: [
                                   Colors.red,
@@ -293,7 +293,7 @@ class _UnitDataWidgetState extends State<UnitDataWidget> {
                                 thickness: width / 15, segmentSpacing: 4)),
                       ),
                     )
-                  : SizedBox(),
+                  : const SizedBox(),
               Expanded(
                 flex: 1,
                 child: Column(
@@ -304,7 +304,7 @@ class _UnitDataWidgetState extends State<UnitDataWidget> {
                         fit: BoxFit.fill,
                         child: Text(
                           widget.unitValue.toStringAsFixed(0),
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -318,7 +318,7 @@ class _UnitDataWidgetState extends State<UnitDataWidget> {
                           (widget.isUnit)
                               ? widget.unit.unit
                               : widget.title ?? "",
-                          style: TextStyle(),
+                          style: const TextStyle(),
                         ),
                       ),
                     )
@@ -381,13 +381,13 @@ class UnitData2Widget extends StatelessWidget {
                       child: valueWidget,
                     );
                   },
-                  duration: Duration(seconds: 1),
+                  duration: const Duration(seconds: 1),
                   value: value,
                   axis: GaugeAxis(
                     min: 0,
                     max: maxValue,
                     degrees: 240,
-                    progressBar: GaugeProgressBar.rounded(
+                    progressBar: const GaugeProgressBar.rounded(
                         placement: GaugeProgressPlacement.inside,
                         gradient: GaugeAxisGradient(
                             colors: [Colors.red, Colors.orange, Colors.green],
@@ -410,7 +410,7 @@ class UnitData2Widget extends StatelessWidget {
                   fit: BoxFit.contain,
                   child: Text(
                     name,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                     ),
                   ),

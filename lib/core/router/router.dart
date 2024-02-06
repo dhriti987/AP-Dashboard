@@ -36,7 +36,7 @@ class AppRouter {
           path: '/settings',
           name: 'Settings',
           builder: (context, state) {
-            return SettingsPage();
+            return const SettingsPage();
           },
         ),
         GoRoute(

@@ -34,11 +34,11 @@ class _UserDialogState extends State<UserDialog> {
     TextEditingController contactNoController = TextEditingController(
         text: widget.isEditUserDialog ? widget.user!.contact : "");
 
-    final _formKey = GlobalKey<FormState>();
+    final formKey = GlobalKey<FormState>();
     var isAdmin = false;
 
     return AlertDialog(
-      title: Column(
+      title: const Column(
         children: [],
       ),
       content: SizedBox(
@@ -52,7 +52,7 @@ class _UserDialogState extends State<UserDialog> {
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
-                gradient: LinearGradient(
+                gradient: const LinearGradient(
                   colors: [
                     Color(0x880b74b0),
                     Color(0x8875479c),
@@ -63,7 +63,7 @@ class _UserDialogState extends State<UserDialog> {
                 ),
               ),
               child: Form(
-                key: _formKey,
+                key: formKey,
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: Column(
@@ -71,63 +71,63 @@ class _UserDialogState extends State<UserDialog> {
                       _buildTextField(
                         label: 'Employee ID',
                         controller: employeeIdController,
-                        color: Color(0xFF7E57C2),
+                        color: const Color(0xFF7E57C2),
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       _buildTextField(
                         label: 'First name',
                         controller: firstNameController,
-                        color: Color(0xFF7E57C2),
+                        color: const Color(0xFF7E57C2),
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       _buildTextField(
                         label: 'Last name',
                         controller: lastNameController,
-                        color: Color(0xFF7E57C2),
+                        color: const Color(0xFF7E57C2),
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       _buildTextField(
                         label: 'Username',
                         controller: userNameController,
-                        color: Color(0xFF7E57C2),
+                        color: const Color(0xFF7E57C2),
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       _buildTextField(
                         label: 'Email',
                         controller: emailController,
-                        color: Color(0xFF7E57C2),
+                        color: const Color(0xFF7E57C2),
                       ),
                       (!widget.isEditUserDialog)
                           ? _buildTextField(
                               label: 'Password',
                               controller: passwordController,
-                              color: Color(0xFF7E57C2),
+                              color: const Color(0xFF7E57C2),
                             )
-                          : SizedBox(
+                          : const SizedBox(
                               height: 1,
                             ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       _buildTextField(
                         label: 'Contact No',
                         controller: contactNoController,
-                        color: Color(0xFF7E57C2),
+                        color: const Color(0xFF7E57C2),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       CheckboxFormField(
                         initialValue: (widget.isEditUserDialog)
                             ? widget.user!.isAdmin
                             : false,
-                        title: Text("Give Admin level access"),
+                        title: const Text("Give Admin level access"),
                         onSaved: (newValue) {
                           isAdmin = newValue ?? false;
                         },
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       ElevatedButton(
                         onPressed: () {
-                          if (_formKey.currentState!.validate()) {
+                          if (formKey.currentState!.validate()) {
                             if (widget.isEditUserDialog) {
                               widget.settingsBloc.add(EditUserEvent(
                                   user: UserModel(
@@ -155,13 +155,13 @@ class _UserDialogState extends State<UserDialog> {
                           }
                         }, //dialog
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Color.fromARGB(255, 88, 19, 105),
+                          backgroundColor: const Color.fromARGB(255, 88, 19, 105),
                           padding: const EdgeInsets.all(15.0),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15),
                           ),
                         ),
-                        child: Text(
+                        child: const Text(
                           'Save',
                           style: TextStyle(
                             fontSize: 18,
@@ -179,7 +179,7 @@ class _UserDialogState extends State<UserDialog> {
           ),
         ),
       ),
-      actions: <Widget>[],
+      actions: const <Widget>[],
       backgroundColor: Colors.transparent,
     );
   }
@@ -194,10 +194,10 @@ class _UserDialogState extends State<UserDialog> {
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.5),
-            offset: Offset(2, 2),
+            offset: const Offset(2, 2),
             blurRadius: 4,
           ),
-          BoxShadow(
+          const BoxShadow(
             color: Colors.white,
             offset: Offset(-2, -2),
             blurRadius: 4,
@@ -209,7 +209,7 @@ class _UserDialogState extends State<UserDialog> {
         child: TextFormField(
           controller: controller,
           keyboardType: TextInputType.text,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 18,
             color: Colors.black,
           ),
@@ -229,7 +229,7 @@ class _UserDialogState extends State<UserDialog> {
 
 class CheckboxFormField extends FormField<bool> {
   CheckboxFormField(
-      {Widget? title,
+      {super.key, Widget? title,
       FormFieldSetter<bool>? onSaved,
       FormFieldValidator<bool>? validator,
       bool initialValue = false,

@@ -10,7 +10,7 @@ class PlantDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     TextEditingController plantNameController = TextEditingController();
 
-    final _formKey = GlobalKey<FormState>();
+    final formKey = GlobalKey<FormState>();
 
     return AlertDialog(
       content: SizedBox(
@@ -24,7 +24,7 @@ class PlantDialog extends StatelessWidget {
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
-                gradient: LinearGradient(
+                gradient: const LinearGradient(
                   colors: [
                     Color(0x880b74b0),
                     Color(0x8875479c),
@@ -35,7 +35,7 @@ class PlantDialog extends StatelessWidget {
                 ),
               ),
               child: Form(
-                key: _formKey,
+                key: formKey,
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: Column(
@@ -43,25 +43,25 @@ class PlantDialog extends StatelessWidget {
                       _buildTextField(
                         label: 'Plant name',
                         controller: plantNameController,
-                        color: Color(0xFF7E57C2),
+                        color: const Color(0xFF7E57C2),
                       ),
-                      SizedBox(height: 30),
+                      const SizedBox(height: 30),
                       ElevatedButton(
                         onPressed: () {
-                          if (_formKey.currentState!.validate()) {
+                          if (formKey.currentState!.validate()) {
                             settingsBloc.add(
                                 AddPlantEvent(name: plantNameController.text));
                             Navigator.of(context).pop();
                           }
                         }, //dialog
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Color.fromARGB(255, 88, 19, 105),
+                          backgroundColor: const Color.fromARGB(255, 88, 19, 105),
                           padding: const EdgeInsets.all(15.0),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15),
                           ),
                         ),
-                        child: Text(
+                        child: const Text(
                           'Save',
                           style: TextStyle(
                             fontSize: 18,
@@ -79,7 +79,7 @@ class PlantDialog extends StatelessWidget {
           ),
         ),
       ),
-      actions: <Widget>[],
+      actions: const <Widget>[],
       backgroundColor: Colors.transparent,
     );
   }
@@ -96,10 +96,10 @@ Widget _buildTextField({
       boxShadow: [
         BoxShadow(
           color: Colors.grey.withOpacity(0.5),
-          offset: Offset(2, 2),
+          offset: const Offset(2, 2),
           blurRadius: 4,
         ),
-        BoxShadow(
+        const BoxShadow(
           color: Colors.white,
           offset: Offset(-2, -2),
           blurRadius: 4,
@@ -111,7 +111,7 @@ Widget _buildTextField({
       child: TextFormField(
         controller: controller,
         keyboardType: TextInputType.text,
-        style: TextStyle(
+        style: const TextStyle(
           fontSize: 18,
           color: Colors.black,
         ),

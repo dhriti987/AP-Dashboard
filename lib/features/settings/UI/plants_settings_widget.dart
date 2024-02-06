@@ -19,7 +19,7 @@ class PlantsAndUnitSettings extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     List<Plant> plants = [];
 
-    Map<String, String> images = plant_dictionary;
+    Map<String, String> images = plantDictionary;
     return BlocConsumer<SettingsBloc, SettingsState>(
       bloc: settingsBloc,
       listenWhen: (previous, current) => current is SettingsActionState,
@@ -43,9 +43,9 @@ class PlantsAndUnitSettings extends StatelessWidget {
         if (state is SettingsInitial) {
           settingsBloc.add(PlantDataFetchEvent());
         } else if (state is PlantLoadingState) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         } else if (state is PlantLoadingFailedState) {
-          return Center(child: Text("Error"));
+          return const Center(child: Text("Error"));
         } else if (state is PlantLoadingSuccessState) {
           plants = state.plants;
         }

@@ -1,7 +1,5 @@
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:streaming_data_dashboard/core/utilities/constants.dart';
 import 'package:streaming_data_dashboard/features/home/bloc/home_bloc.dart';
@@ -32,27 +30,27 @@ class HomePage extends StatelessWidget {
         }
       },
       builder: (context, state) {
-        Widget body = Center(
+        Widget body = const Center(
           child: CircularProgressIndicator(),
         );
         if (state is HomeInitial) {
           homeBloc.add(HomeDataFetchEvent());
         } else if (state is HomeLoadingState) {
-          body = Center(
+          body = const Center(
             child: CircularProgressIndicator(),
           );
         } else if (state is HomeLoadingSuccessState) {
           plants = state.plants;
           body = loadedBody(plants);
         } else if (state is HomeLoadingFailedState) {
-          body = Center(
+          body = const Center(
             child: Text("Error!"),
           );
         }
         return Scaffold(
           appBar: AppBar(
               centerTitle: true,
-              title: Text(
+              title: const Text(
                 "APL Dashboard",
                 style: TextStyle(fontWeight: FontWeight.w800, fontSize: 30),
               ),
@@ -74,24 +72,7 @@ class HomePage extends StatelessWidget {
   }
 
   SizedBox loadedBody(List<Plant> plants) {
-<<<<<<< HEAD
-    Map<String, String> images = {
-      "Mundra":
-          "https://www.adanipower.com/-/media/Project/Power/OperationalPowerPlants/mundra/Hi-tech-Infra/mundra2",
-      "Tirora":
-          "https://www.adanipower.com/-/media/Project/Power/OperationalPowerPlants/Tiroda/Bannner/Tirora_banner_.jpg?la=en&hash=222D0E4294FA127360E3407E5BE9843B",
-      "Raipur":
-          "https://www.adanipower.com/-/media/Project/Power/OperationalPowerPlants/Raipur-Chhattisgarh/Raipur3.jpg?la=en&hash=A10A62355B3FD346119C108E7A493CE8",
-      "Kawai":
-          "https://www.adanipower.com/-/media/Project/Power/OperationalPowerPlants/Kawai/Hi-tech-Infra/kawai_1",
-      "Chennai":
-          "https://www.adanipower.com/-/media/Project/Power/OperationalPowerPlants/Kawai/Hi-tech-Infra/kawai_1",
-      "Raigarh":
-          "https://www.adanipower.com/-/media/Project/Power/OperationalPowerPlants/Kawai/Hi-tech-Infra/kawai_1"
-    };
-=======
-    Map<String, String> images = plant_dictionary;
->>>>>>> b6204536f9a600b7dd32bd7bc7aeca38d9d4d9ca
+    Map<String, String> images = plantDictionary;
 
     return SizedBox(
       width: double.maxFinite,

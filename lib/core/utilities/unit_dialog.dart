@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:streaming_data_dashboard/features/units_edit/bloc/units_edit_bloc.dart';
 import 'package:streaming_data_dashboard/models/plant_model.dart';
@@ -28,10 +27,10 @@ class UnitDialog extends StatelessWidget {
     TextEditingController ratedPowerController = TextEditingController(
         text: isEditUnitDialog ? unit!.maxVoltage.toString() : "");
 
-    final _formKey = GlobalKey<FormState>();
+    final formKey = GlobalKey<FormState>();
 
     return AlertDialog(
-      title: Column(
+      title: const Column(
         children: [],
       ),
       content: SizedBox(
@@ -45,7 +44,7 @@ class UnitDialog extends StatelessWidget {
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
-                gradient: LinearGradient(
+                gradient: const LinearGradient(
                   colors: [
                     Color(0x880b74b0),
                     Color(0x8875479c),
@@ -56,7 +55,7 @@ class UnitDialog extends StatelessWidget {
                 ),
               ),
               child: Form(
-                key: _formKey,
+                key: formKey,
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: Column(
@@ -65,33 +64,33 @@ class UnitDialog extends StatelessWidget {
                         label: 'Point ID',
                         hintText: 'Enter point ID',
                         controller: pointIdController,
-                        color: Color(0xFF7E57C2),
+                        color: const Color(0xFF7E57C2),
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       _buildTextField(
                         label: 'System guid',
                         hintText: 'Enter system guid',
                         controller: systemGuidController,
-                        color: Color(0xFF7E57C2),
+                        color: const Color(0xFF7E57C2),
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       _buildTextField(
                         label: 'Unit name',
                         hintText: 'Enter unit name',
                         controller: unitNameController,
-                        color: Color(0xFF7E57C2),
+                        color: const Color(0xFF7E57C2),
                       ),
-                      SizedBox(height: 30),
+                      const SizedBox(height: 30),
                       _buildTextField(
                         label: 'Rated power',
                         hintText: 'Enter rated power',
                         controller: ratedPowerController,
-                        color: Color(0xFF7E57C2),
+                        color: const Color(0xFF7E57C2),
                       ),
-                      SizedBox(height: 30),
+                      const SizedBox(height: 30),
                       ElevatedButton(
                         onPressed: () {
-                          if (_formKey.currentState!.validate()) {
+                          if (formKey.currentState!.validate()) {
                             if (isEditUnitDialog) {
                               unitsEditBloc.add(EditUnitEvent(
                                   unit: Unit(
@@ -116,13 +115,13 @@ class UnitDialog extends StatelessWidget {
                           }
                         }, //dialog
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Color.fromARGB(255, 88, 19, 105),
+                          backgroundColor: const Color.fromARGB(255, 88, 19, 105),
                           padding: const EdgeInsets.all(15.0),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15),
                           ),
                         ),
-                        child: Text(
+                        child: const Text(
                           'Save',
                           style: TextStyle(
                             fontSize: 18,
@@ -140,7 +139,7 @@ class UnitDialog extends StatelessWidget {
           ),
         ),
       ),
-      actions: <Widget>[],
+      actions: const <Widget>[],
       backgroundColor: Colors.transparent,
     );
   }
@@ -158,10 +157,10 @@ Widget _buildTextField({
       boxShadow: [
         BoxShadow(
           color: Colors.grey.withOpacity(0.5),
-          offset: Offset(2, 2),
+          offset: const Offset(2, 2),
           blurRadius: 4,
         ),
-        BoxShadow(
+        const BoxShadow(
           color: Colors.white,
           offset: Offset(-2, -2),
           blurRadius: 4,
@@ -173,7 +172,7 @@ Widget _buildTextField({
       child: TextFormField(
         controller: controller,
         keyboardType: TextInputType.text,
-        style: TextStyle(
+        style: const TextStyle(
           fontSize: 18,
           color: Colors.black,
         ),

@@ -124,14 +124,14 @@ class _UnitEditPageState extends State<UnitEditPage> {
                     Text(
                       state.apiException.error.first,
                       style:
-                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                          const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     Text(
                       state.apiException.error.last,
-                      style: TextStyle(fontSize: 20),
+                      style: const TextStyle(fontSize: 20),
                     )
                   ]),
                 );
@@ -144,11 +144,11 @@ class _UnitEditPageState extends State<UnitEditPage> {
           if (state is UnitsEditInitial) {
             unitsEditBloc.add(FetchUnitDataEvent(plantName: widget.plant.name));
           } else if (state is UnitEditLoadingState) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (state is UnitEditLoadingSuccessState) {
             units = state.units;
           } else if (state is UnitEditLoadingFailedState) {
-            return Center(child: Text("Error"));
+            return const Center(child: Text("Error"));
           } else if (state is UnitAddedState) {
             units.add(state.unit);
           } else if (state is UnitDeleteSuccessState) {
@@ -169,7 +169,7 @@ class _UnitEditPageState extends State<UnitEditPage> {
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: DataTable(
-                  border: TableBorder(),
+                  border: const TableBorder(),
                   columns: const [
                     DataColumn(
                       label: Flexible(

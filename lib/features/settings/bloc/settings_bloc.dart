@@ -16,9 +16,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   final SettingRepository _settingRepository = sl.get<SettingRepository>();
 
   SettingsBloc() : super(SettingsInitial()) {
-    on<SettingsEvent>((event, emit) {
-      // TODO: implement event handler
-    });
+    on<SettingsEvent>((event, emit) {});
     on<TabChangeEvent>(onTabChangeEvent);
     on<OnPlantClickedEvent>(onPlantClickedEvent);
     on<PlantDataFetchEvent>(onPlantDataFetchEvent);

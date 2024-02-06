@@ -11,7 +11,7 @@ class MyDrawer extends StatelessWidget {
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
-          DrawerHeader(
+          const DrawerHeader(
               decoration: BoxDecoration(color: Colors.grey),
               child: Align(
                   alignment: Alignment.centerLeft,

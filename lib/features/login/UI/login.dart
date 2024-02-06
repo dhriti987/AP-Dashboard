@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:streaming_data_dashboard/features/login/bloc/login_bloc.dart';
@@ -47,7 +46,7 @@ class LoginPage extends StatelessWidget {
         }
         return Scaffold(
           appBar: AppBar(
-            title: Text('Login Screen',
+            title: const Text('Login Screen',
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -82,15 +81,15 @@ class LoginPage extends StatelessWidget {
                               decoration: InputDecoration(
                                 labelText: 'Username',
                                 hintText: 'Enter username',
-                                prefixIcon: Icon(Icons.person_2_sharp),
-                                border: OutlineInputBorder(),
+                                prefixIcon: const Icon(Icons.person_2_sharp),
+                                border: const OutlineInputBorder(),
                                 filled: true,
                                 fillColor: Colors.white,
                                 errorText: usernameErrorText,
                               ),
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 30,
                           ),
                           Padding(
@@ -103,13 +102,13 @@ class LoginPage extends StatelessWidget {
                               decoration: InputDecoration(
                                 labelText: 'Password',
                                 hintText: 'Enter Password',
-                                prefixIcon: Icon(Icons.password),
-                                border: OutlineInputBorder(),
+                                prefixIcon: const Icon(Icons.password),
+                                border: const OutlineInputBorder(),
                                 errorText: passwordErrorText,
                               ),
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 30,
                           ),
                           Padding(
@@ -122,24 +121,24 @@ class LoginPage extends StatelessWidget {
                                     username: _username.text,
                                     password: _password.text));
                               },
-                              child: Text('Login'),
                               color: Colors.blue,
                               textColor: Colors.white,
+                              child: const Text('Login'),
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
                           TextButton(
                               onPressed: () {
                                 // Add logic for "Forgot Password?"
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
+                                  const SnackBar(
                                     content: Text('Coming soon!'),
                                   ),
                                 );
                               },
-                              child: Text(
+                              child: const Text(
                                 'Forgot Password?',
                                 style: TextStyle(
                                   color: Colors.blue,

@@ -13,7 +13,7 @@ part 'units_edit_event.dart';
 part 'units_edit_state.dart';
 
 class UnitsEditBloc extends Bloc<UnitsEditEvent, UnitsEditState> {
-  UnitEditRepository _unitEditRepository = sl.get<UnitEditRepository>();
+  final UnitEditRepository _unitEditRepository = sl.get<UnitEditRepository>();
 
   UnitsEditBloc() : super(UnitsEditInitial()) {
     on<UnitsEditEvent>((event, emit) {
