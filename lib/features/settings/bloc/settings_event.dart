@@ -75,3 +75,5 @@ class ButtonDeletePlantClickedEvent extends SettingsEvent {
 
   ButtonDeletePlantClickedEvent({required this.plant});
 }
+
+class LogoutButtonClickedEvent extends SettingsEvent {}

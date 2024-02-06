@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:streaming_data_dashboard/core/exceptions/api_exceptions.dart';
+import 'package:streaming_data_dashboard/features/login/repository/login_repository.dart';
 import 'package:streaming_data_dashboard/features/settings/repository/setting_repository.dart';
 import 'package:streaming_data_dashboard/models/plant_model.dart';
 import 'package:streaming_data_dashboard/models/user_model.dart';
@@ -30,6 +31,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     on<EditUserEvent>(onEditUserEvent);
     on<AddPlantEvent>(onAddPlantEvent);
     on<ButtonDeletePlantClickedEvent>(onButtonDeletePlantClickedEvent);
+    on<LogoutButtonClickedEvent>(onLogoutButtonClickedEvent);
   }
 
   FutureOr<void> onTabChangeEvent(
@@ -136,5 +138,12 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     } on ApiException catch (e) {
       emit(UsersLoadingFailedState(apiException: e));
     }
+  }
+
+  FutureOr<void> onLogoutButtonClickedEvent(
+      LogoutButtonClickedEvent event, Emitter<SettingsState> emit) async {
+    print("logging out");
+    await sl.get<LoginRepository>().logout();
+    emit(LogoutSuccessState());
   }
 }

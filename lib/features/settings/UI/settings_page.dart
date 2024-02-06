@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:streaming_data_dashboard/features/settings/UI/client_credentials_settings_widget.dart';
 import 'package:streaming_data_dashboard/features/settings/UI/plants_settings_widget.dart';
 import 'package:streaming_data_dashboard/features/settings/UI/users_settings_widget.dart';
@@ -31,7 +32,11 @@ class _SettingsPageState extends State<SettingsPage> {
       bloc: settingsBloc,
       listenWhen: (previous, current) => current is SettingsActionState,
       buildWhen: (previous, current) => current is! SettingsActionState,
-      listener: (context, state) {},
+      listener: (context, state) {
+        if (state is LogoutSuccessState) {
+          context.go("/login");
+        }
+      },
       builder: (context, state) {
         if (state is TabChangeState) {
           currentSettings = state.index;
@@ -119,7 +124,10 @@ class _SettingsPageState extends State<SettingsPage> {
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 20),
                       child: ElevatedButton(
-                          onPressed: () {}, child: const Text("Logout")),
+                          onPressed: () {
+                            settingsBloc.add(LogoutButtonClickedEvent());
+                          },
+                          child: const Text("Logout")),
                     ),
                   ],
                 ),

@@ -25,6 +25,10 @@ class _DashboardPageState extends State<DashboardPage> {
   late final WebSocketChannel channel;
   List<Unit> units = [];
 
+  double frequency = 0;
+  double totalValue = 0;
+  double maxValue = 0;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -98,9 +102,6 @@ class _DashboardPageState extends State<DashboardPage> {
           }
         },
         builder: (context, state) {
-          double frequency = 0;
-          double totalValue = 0;
-          double maxValue = 0;
           if (state is DashboardInitial) {
             dashboardBloc.add(FetchUnitDataEvent(plantName: widget.plant.name));
           } else if (state is DashboardLoadingState) {
@@ -129,7 +130,7 @@ class _DashboardPageState extends State<DashboardPage> {
                       children: [
                         UnitData2Widget(
                           name: "Frequency",
-                          value: 50.1,
+                          value: frequency,
                           maxValue: 60,
                           valueWidget: Text.rich(TextSpan(
                               text: frequency.toString(),
@@ -332,7 +333,7 @@ class _UnitDataWidgetState extends State<UnitDataWidget> {
   }
 }
 
-class UnitData2Widget extends StatefulWidget {
+class UnitData2Widget extends StatelessWidget {
   const UnitData2Widget(
       {super.key,
       required this.name,
@@ -345,11 +346,6 @@ class UnitData2Widget extends StatefulWidget {
   final double maxValue;
   final Widget valueWidget;
 
-  @override
-  State<UnitData2Widget> createState() => _UnitData2WidgetState();
-}
-
-class _UnitData2WidgetState extends State<UnitData2Widget> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -382,14 +378,14 @@ class _UnitData2WidgetState extends State<UnitData2Widget> {
                   builder: (context, child, value) {
                     return FittedBox(
                       fit: BoxFit.contain,
-                      child: widget.valueWidget,
+                      child: valueWidget,
                     );
                   },
                   duration: Duration(seconds: 1),
-                  value: widget.value,
+                  value: value,
                   axis: GaugeAxis(
                     min: 0,
-                    max: widget.maxValue,
+                    max: maxValue,
                     degrees: 240,
                     progressBar: GaugeProgressBar.rounded(
                         placement: GaugeProgressPlacement.inside,
@@ -399,7 +395,7 @@ class _UnitData2WidgetState extends State<UnitData2Widget> {
                     segments: [
                       GaugeSegment(
                         from: 0,
-                        to: widget.maxValue,
+                        to: maxValue,
                         cornerRadius: Radius.zero,
                       )
                     ],
@@ -413,7 +409,7 @@ class _UnitData2WidgetState extends State<UnitData2Widget> {
                 child: FittedBox(
                   fit: BoxFit.contain,
                   child: Text(
-                    widget.name,
+                    name,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                     ),

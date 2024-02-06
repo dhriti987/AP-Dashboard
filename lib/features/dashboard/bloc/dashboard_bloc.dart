@@ -40,7 +40,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       );
       emit(DashboardLoadingSuccessState(
           units: data,
-          frequency: 50.1,
+          frequency: 0,
           totalValue: totalValue,
           maxValue: maxValue));
     } on ApiException catch (e) {

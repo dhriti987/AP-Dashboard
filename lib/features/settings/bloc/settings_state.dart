@@ -94,3 +94,5 @@ class EditUserSuccessState extends SettingsState {
 
   EditUserSuccessState({required this.user});
 }
+
+class LogoutSuccessState extends SettingsActionState {}

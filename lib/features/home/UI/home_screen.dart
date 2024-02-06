@@ -76,7 +76,7 @@ class HomePage extends StatelessWidget {
     Map<String, String> images = {
       "Mundra":
           "https://www.adanipower.com/-/media/Project/Power/OperationalPowerPlants/mundra/Hi-tech-Infra/mundra2",
-      "Tiroda":
+      "Tirora":
           "https://www.adanipower.com/-/media/Project/Power/OperationalPowerPlants/Tiroda/Bannner/Tirora_banner_.jpg?la=en&hash=222D0E4294FA127360E3407E5BE9843B",
       "Raipur":
           "https://www.adanipower.com/-/media/Project/Power/OperationalPowerPlants/Raipur-Chhattisgarh/Raipur3.jpg?la=en&hash=A10A62355B3FD346119C108E7A493CE8",
@@ -84,7 +84,7 @@ class HomePage extends StatelessWidget {
           "https://www.adanipower.com/-/media/Project/Power/OperationalPowerPlants/Kawai/Hi-tech-Infra/kawai_1",
       "Chennai":
           "https://www.adanipower.com/-/media/Project/Power/OperationalPowerPlants/Kawai/Hi-tech-Infra/kawai_1",
-      "Raighar":
+      "Raigarh":
           "https://www.adanipower.com/-/media/Project/Power/OperationalPowerPlants/Kawai/Hi-tech-Infra/kawai_1"
     };
 
