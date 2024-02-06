@@ -1,14 +1,16 @@
 class UserModel {
+  final int id;
   final String employeeId;
   final String username;
-  final String firstName;
-  final String lastName;
+  final String? firstName;
+  final String? lastName;
   final String email;
   final String contact;
   final bool isAdmin;
 
   UserModel(
-      {required this.employeeId,
+      {required this.id,
+      required this.employeeId,
       required this.username,
       required this.firstName,
       required this.lastName,
@@ -17,6 +19,7 @@ class UserModel {
       required this.isAdmin});
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
+        id: json['id'],
         employeeId: json["employee_id"],
         username: json["username"],
         firstName: json["first_name"],

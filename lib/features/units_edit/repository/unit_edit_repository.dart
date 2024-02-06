@@ -6,8 +6,8 @@ import 'package:streaming_data_dashboard/models/unit_model.dart';
 class UnitEditRepository {
   final ApiService _apiService;
   final unitByPlantURL = "/dashboard/unit/";
-  final unitAddUrl = "";
-  final unitDeleteUrl = "";
+  final unitAddUrl = "/dashboard/unit/add_unit/";
+  final unitDeleteUrl = "/dashboard/units/";
 
   UnitEditRepository({required ApiService apiService})
       : _apiService = apiService;
@@ -55,6 +55,25 @@ class UnitEditRepository {
       print(e);
       throw ApiException(
           exception: e, error: ["Delete Failed", "Unable to Delete the Unit"]);
+    }
+  }
+
+  Future<Unit> editUnit(Unit unit) async {
+    final api = _apiService.getApi();
+    var data = FormData.fromMap({
+      "point_id": unit.pointId,
+      "system_guid": unit.systemGuid,
+      "unit": unit.unit,
+      "max_rated_power": unit.maxVoltage
+    });
+    try {
+      var response =
+          await api.patch(unitDeleteUrl + unit.id.toString(), data: data);
+      return Unit.fromJson(response.data);
+    } on DioException catch (e) {
+      print(e);
+      throw ApiException(
+          exception: e, error: ["Edit Failed", "Unable to Edit the Unit"]);
     }
   }
 }

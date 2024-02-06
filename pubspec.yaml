@@ -48,6 +48,7 @@ dependencies:
   window_manager: ^0.3.7
   web_socket_channel: any
   fl_chart: ^0.66.1
+  equatable: ^2.0.5
 
 dev_dependencies:
   flutter_test:

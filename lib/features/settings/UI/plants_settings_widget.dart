@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:streaming_data_dashboard/core/utilities/plant_dialog.dart';
 import 'package:streaming_data_dashboard/features/settings/bloc/settings_bloc.dart';
 import 'package:streaming_data_dashboard/models/plant_model.dart';
 import 'package:streaming_data_dashboard/service_locator.dart';
@@ -24,6 +25,14 @@ class PlantsAndUnitSettings extends StatelessWidget {
         if (state is NavigateToUnitEditPageActionState) {
           context.push("/edit-units", extra: state.plant);
         }
+        if (state is OpenAddPlantDialogState) {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return PlantDialog();
+            },
+          );
+        }
       },
       builder: (context, state) {
         if (state is SettingsInitial) {
@@ -34,6 +43,12 @@ class PlantsAndUnitSettings extends StatelessWidget {
           return Center(child: Text("Error"));
         } else if (state is PlantLoadingSuccessState) {
           plants = state.plants;
+        }
+        if (state is AddPlantSuccessState) {
+          print(state.plant.name);
+          plants.add(state.plant);
+        } else if (state is OnDeletePlantSuccessState) {
+          settingsBloc.add(PlantDataFetchEvent());
         }
         return Column(
           children: [
@@ -56,7 +71,9 @@ class PlantsAndUnitSettings extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.all(12.0),
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          settingsBloc.add(ButtonAddPlantClickedEvent());
+                        },
                         style: ElevatedButton.styleFrom(
                             shape: const StadiumBorder(),
                             padding: const EdgeInsets.symmetric(
@@ -97,6 +114,10 @@ class PlantsAndUnitSettings extends StatelessWidget {
                                 settingsBloc
                                     .add(OnPlantClickedEvent(plant: plant));
                               },
+                              onDelete: () {
+                                settingsBloc.add(ButtonDeletePlantClickedEvent(
+                                    plant: plant));
+                              },
                             ))
                         .toList()
                       ..add(const SizedBox(
@@ -125,10 +146,12 @@ class PlantItemWidget extends StatefulWidget {
     super.key,
     required this.plant,
     required this.onTap,
+    required this.onDelete,
   });
 
   final Plant plant;
   final void Function() onTap;
+  final void Function() onDelete;
 
   @override
   State<PlantItemWidget> createState() => _PlantItemWidgetState();
@@ -211,7 +234,9 @@ class _PlantItemWidgetState extends State<PlantItemWidget>
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              widget.onDelete();
+                            },
                             icon: const Icon(Icons.delete_rounded),
                             splashRadius: 5,
                             color: Colors.grey.shade600,

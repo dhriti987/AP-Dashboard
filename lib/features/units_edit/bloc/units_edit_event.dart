@@ -29,3 +29,21 @@ class DeleteUnitEvent extends UnitsEditEvent {
 
   DeleteUnitEvent({required this.unit});
 }
+
+class EditUnitEvent extends UnitsEditEvent {
+  final Unit unit;
+
+  EditUnitEvent({required this.unit});
+}
+
+class ClickAddUnitEvent extends UnitsEditEvent {
+  final Plant plant;
+
+  ClickAddUnitEvent({required this.plant});
+}
+
+class ClickEditUnitEvent extends UnitsEditEvent {
+  final Unit unit;
+
+  ClickEditUnitEvent({required this.unit});
+}

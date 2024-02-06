@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:streaming_data_dashboard/core/utilities/unit_dialog.dart';
 import 'package:streaming_data_dashboard/features/units_edit/bloc/units_edit_bloc.dart';
 import 'package:streaming_data_dashboard/models/plant_model.dart';
 import 'package:streaming_data_dashboard/models/unit_model.dart';
@@ -16,6 +17,7 @@ class UnitEditPage extends StatefulWidget {
 
 class _UnitEditPageState extends State<UnitEditPage> {
   final UnitsEditBloc unitsEditBloc = sl.get<UnitsEditBloc>();
+
   List<Unit> units = [
     // Unit(
     //   id: 1,
@@ -45,6 +47,11 @@ class _UnitEditPageState extends State<UnitEditPage> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
@@ -53,7 +60,9 @@ class _UnitEditPageState extends State<UnitEditPage> {
         centerTitle: true,
         actions: [
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              unitsEditBloc.add(ClickAddUnitEvent(plant: widget.plant));
+            },
             style: ElevatedButton.styleFrom(
                 shape: const StadiumBorder(),
                 padding:
@@ -76,10 +85,60 @@ class _UnitEditPageState extends State<UnitEditPage> {
       ),
       body: BlocConsumer<UnitsEditBloc, UnitsEditState>(
         bloc: unitsEditBloc,
+        listenWhen: (previous, current) => current is UnitEditActionState,
+        buildWhen: (previous, current) => current is! UnitEditActionState,
         listener: (context, state) {
+          print(state.runtimeType);
           // TODO: implement listener
+
+          if (state is EditUnitButtonClickedState) {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return UnitDialog(
+                  plant: widget.plant,
+                  isEditUnitDialog: true,
+                  unit: state.unit,
+                );
+              },
+            );
+          }
+          if (state is AddUnitButtonClickedState) {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return UnitDialog(
+                  plant: widget.plant,
+                );
+              },
+            );
+          }
+          if (state is UnitEditErrorState) {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  content: Column(mainAxisSize: MainAxisSize.min, children: [
+                    Text(
+                      state.apiException.error.first,
+                      style:
+                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      state.apiException.error.last,
+                      style: TextStyle(fontSize: 20),
+                    )
+                  ]),
+                );
+              },
+            );
+          }
         },
         builder: (context, state) {
+          print(state.runtimeType);
           if (state is UnitsEditInitial) {
             unitsEditBloc.add(FetchUnitDataEvent(plantName: widget.plant.name));
           } else if (state is UnitEditLoadingState) {
@@ -88,6 +147,15 @@ class _UnitEditPageState extends State<UnitEditPage> {
             units = state.units;
           } else if (state is UnitEditLoadingFailedState) {
             return Center(child: Text("Error"));
+          } else if (state is UnitAddedState) {
+            units.add(state.unit);
+          } else if (state is UnitDeleteSuccessState) {
+            units.remove(state.unit);
+          } else if (state is UnitEditSuccessState) {
+            print("UnitEditSuccessState----------------------------------");
+            var index =
+                units.indexWhere((element) => element.id == state.unit.id);
+            units[index] = state.unit;
           }
           return Align(
             alignment: Alignment.topCenter,
@@ -155,18 +223,24 @@ class _UnitEditPageState extends State<UnitEditPage> {
                         (data) => DataRow(
                           cells: [
                             DataCell(Text((data.key + 1).toString())),
-                            DataCell(Text(data.value.pointId)),
-                            DataCell(Text(data.value.systemGuid)),
-                            DataCell(Text(data.value.unit)),
-                            DataCell(Text(data.value.code)),
+                            DataCell(SelectableText(data.value.pointId)),
+                            DataCell(SelectableText(data.value.systemGuid)),
+                            DataCell(SelectableText(data.value.unit)),
+                            DataCell(SelectableText(data.value.code)),
                             DataCell(Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 IconButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      unitsEditBloc.add(
+                                          ClickEditUnitEvent(unit: data.value));
+                                    },
                                     icon: const Icon(Icons.edit_rounded)),
                                 IconButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      unitsEditBloc.add(
+                                          DeleteUnitEvent(unit: data.value));
+                                    },
                                     icon: const Icon(Icons.delete_rounded))
                               ],
                             ))

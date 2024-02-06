@@ -38,7 +38,7 @@ class _DashboardPageState extends State<DashboardPage> {
     final SharedPreferences sharedPreferences = sl.get<SharedPreferences>();
     final token = sharedPreferences.getString("accessToken");
     final wsUrl = Uri.parse(
-        'ws://192.168.191.136:8000/unit_data/?token=${token}&plant=${widget.plant.name}');
+        'ws://127.0.0.1:8000/unit_data/?token=${token}&plant=${widget.plant.name}');
     channel = WebSocketChannel.connect(wsUrl);
 
     await channel.ready;
