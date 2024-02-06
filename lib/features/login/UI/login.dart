@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:streaming_data_dashboard/core/utilities/gradient_text.dart';
 import 'package:streaming_data_dashboard/features/login/bloc/login_bloc.dart';
 import 'package:streaming_data_dashboard/service_locator.dart';
 
@@ -48,9 +47,13 @@ class LoginPage extends StatelessWidget {
         }
         return Scaffold(
           appBar: AppBar(
-            title: Text('Login Screen'),
+            title: Text('Login Screen',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                )),
             centerTitle: true,
-            backgroundColor: Color.fromARGB(255, 144, 93, 179),
+            backgroundColor: Colors.blue,
           ),
           body: Center(
             child: SingleChildScrollView(
@@ -59,20 +62,12 @@ class LoginPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const GradientText(
-                    'adani',
-                    gradient: LinearGradient(colors: [
-                      Color(0xff0b74b0),
-                      Color(0xff75479c),
-                      Color(0xffbd3861)
-                    ]),
-                    style: TextStyle(
-                      fontSize: 55,
-                      color: Colors.teal,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Pacifico',
-                    ),
-                  ),
+                  Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      child: Container(
+                        child: Image.network(
+                            'https://upload.wikimedia.org/wikipedia/commons/3/33/Adani-power-logo.png'),
+                      )),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 30),
                     child: Form(
@@ -128,7 +123,7 @@ class LoginPage extends StatelessWidget {
                                     password: _password.text));
                               },
                               child: Text('Login'),
-                              color: Colors.teal,
+                              color: Colors.blue,
                               textColor: Colors.white,
                             ),
                           ),
@@ -138,12 +133,16 @@ class LoginPage extends StatelessWidget {
                           TextButton(
                               onPressed: () {
                                 // Add logic for "Forgot Password?"
-                                print("Forgot Password?");
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('Coming soon!'),
+                                  ),
+                                );
                               },
                               child: Text(
                                 'Forgot Password?',
                                 style: TextStyle(
-                                  color: Colors.teal,
+                                  color: Colors.blue,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ))
