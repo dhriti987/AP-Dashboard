@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:streaming_data_dashboard/core/utilities/constants.dart';
@@ -8,9 +7,10 @@ import 'package:streaming_data_dashboard/service_locator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomePage extends StatelessWidget {
-  HomePage({super.key});
+  HomePage({super.key, required this.isAdmin});
 
   final HomeBloc homeBloc = sl.get<HomeBloc>();
+  final bool isAdmin;
 
   @override
   Widget build(BuildContext context) {
@@ -56,9 +56,11 @@ class HomePage extends StatelessWidget {
               ),
               actions: [
                 IconButton(
-                  onPressed: () {
-                    homeBloc.add(SettingsButtonOnClickedEvent());
-                  },
+                  onPressed: isAdmin
+                      ? () {
+                          homeBloc.add(SettingsButtonOnClickedEvent());
+                        }
+                      : null,
                   icon: const Icon(
                     Icons.settings_suggest_outlined,
                   ),

@@ -65,6 +65,7 @@ class LoginRepository {
         JwtDecoder.getRemainingTime(refresToken).inDays > 0) {
       getToken();
       _appRouter.isAuthenticated = true;
+      _appRouter.isAdmin = _sharedPreferences.getBool("isAdmin") ?? false;
       Timer.periodic(const Duration(hours: 23), (timer) {
         if (JwtDecoder.getRemainingTime(refresToken).inDays > 0) {
           getToken();

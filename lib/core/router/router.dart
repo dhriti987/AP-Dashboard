@@ -15,6 +15,7 @@ import 'package:streaming_data_dashboard/models/unit_model.dart';
 class AppRouter {
   final SharedPreferences pref;
   bool isAuthenticated = false;
+  bool isAdmin = false;
 
   AppRouter({required this.pref});
 
@@ -29,7 +30,9 @@ class AppRouter {
           path: '/',
           name: 'Home',
           builder: (context, state) {
-            return HomePage();
+            return HomePage(
+              isAdmin: isAdmin,
+            );
           },
         ),
         GoRoute(
