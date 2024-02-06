@@ -21,15 +21,18 @@ class UnitAnalysisPage extends StatefulWidget {
 }
 
 class _UnitAnalysisPageState extends State<UnitAnalysisPage> {
+  late Unit unit;
   double total = 0;
   double max_value = 0;
   double min_value = 0;
 
   List<Map<String, dynamic>> dataPoints = [];
+  List<Map<String, dynamic>> freqPoints = [];
 
   @override
   void initState() {
-    Future.delayed(Duration(seconds: 2), () {
+    unit = widget.unit;
+    Future.delayed(const Duration(seconds: 2), () {
       widget.bloc.add(FetchDatapointsEvent(unitId: widget.unit.id));
     });
     super.initState();
@@ -46,11 +49,12 @@ class _UnitAnalysisPageState extends State<UnitAnalysisPage> {
           bloc: widget.bloc,
           builder: (context, state) {
             if (state is UnitAnalysisLodingState) {
-              return Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator());
             } else if (state is UnitAnalysisLodingFailedState) {
-              return Center(child: Text("Error"));
+              return const Center(child: Text("Error"));
             } else if (state is UnitAnalysisLodingSuccessState) {
               dataPoints = state.dataPoints;
+              freqPoints = state.frequencyPoints;
               total = state.total;
               max_value = state.max_value;
               min_value = state.min_value;
@@ -65,7 +69,6 @@ class _UnitAnalysisPageState extends State<UnitAnalysisPage> {
                       BlocBuilder<DashboardBloc, DashboardState>(
                         bloc: widget.bloc,
                         builder: (context, state) {
-                          Unit? unit;
                           if (state is DashboardLoadingSuccessState) {
                             unit = state.units.singleWhere(
                                 (element) => element.id == widget.unit.id);
@@ -83,11 +86,11 @@ class _UnitAnalysisPageState extends State<UnitAnalysisPage> {
                             child: UnitDataWidget(
                                 unit: widget.unit,
                                 onTap: () {},
-                                unitValue: unit?.unitValue ?? 0),
+                                unitValue: unit.unitValue),
                           );
                         },
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 10,
                       ),
                       Expanded(
@@ -101,7 +104,7 @@ class _UnitAnalysisPageState extends State<UnitAnalysisPage> {
                           title: "AVG",
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 10,
                       ),
                       Expanded(
@@ -115,7 +118,7 @@ class _UnitAnalysisPageState extends State<UnitAnalysisPage> {
                           title: "MAX",
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 10,
                       ),
                       Expanded(
@@ -131,11 +134,16 @@ class _UnitAnalysisPageState extends State<UnitAnalysisPage> {
                       ),
                     ],
                   )),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   Expanded(
-                      flex: 6, child: MyLineChartWidget(points: dataPoints)),
+                      flex: 6,
+                      child: MyLineChartWidget(
+                        points: dataPoints,
+                        freqPoints: freqPoints,
+                        unit: unit,
+                      )),
                 ],
               ),
             );
@@ -145,14 +153,22 @@ class _UnitAnalysisPageState extends State<UnitAnalysisPage> {
 }
 
 class MyLineChartWidget extends StatelessWidget {
-  const MyLineChartWidget({super.key, required this.points});
+  const MyLineChartWidget(
+      {super.key,
+      required this.points,
+      required this.freqPoints,
+      required this.unit});
 
   final List<Map<String, dynamic>> points;
+  final List<Map<String, dynamic>> freqPoints;
+  final Unit unit;
+  final int minFrequency = 47;
+  final int maxFrequency = 55;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         gradient: LinearGradient(
             colors: [Colors.black54, Colors.white54],
             begin: Alignment.topCenter,
@@ -160,92 +176,121 @@ class MyLineChartWidget extends StatelessWidget {
       ),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: LineChart(LineChartData(
-          minX: 0,
-          maxX: 24,
-          minY: 0,
-          maxY: 360,
-          lineTouchData: LineTouchData(
-            touchTooltipData: LineTouchTooltipData(
-              tooltipBgColor: Colors.white10,
-              getTooltipItems: (List<LineBarSpot> touchedBarSpots) {
-                return touchedBarSpots.map((barSpot) {
-                  final flSpot = barSpot;
-                  if (flSpot.x == 0 || flSpot.x == 24) {
-                    return null;
-                  }
+        child: LineChart(
+          LineChartData(
+            minX: 0,
+            maxX: 24,
+            minY: 0,
+            maxY: unit.maxVoltage.toDouble(),
+            lineTouchData: LineTouchData(
+              touchTooltipData: LineTouchTooltipData(
+                tooltipBgColor: Colors.white10,
+                getTooltipItems: (List<LineBarSpot> touchedBarSpots) {
+                  touchedBarSpots
+                      .sort((a, b) => a.barIndex.compareTo(b.barIndex));
+                  return touchedBarSpots.map((barSpot) {
+                    final flSpot = barSpot;
+                    if (flSpot.x == 0 || flSpot.x == 24) {
+                      return null;
+                    }
 
-                  TextAlign textAlign;
-                  switch (flSpot.x.toInt()) {
-                    case 1:
-                      textAlign = TextAlign.left;
-                      break;
-                    case 5:
-                      textAlign = TextAlign.right;
-                      break;
-                    default:
-                      textAlign = TextAlign.center;
-                  }
+                    TextAlign textAlign;
+                    switch (flSpot.x.toInt()) {
+                      case 1:
+                        textAlign = TextAlign.left;
+                        break;
+                      case 5:
+                        textAlign = TextAlign.right;
+                        break;
+                      default:
+                        textAlign = TextAlign.center;
+                    }
 
-                  return LineTooltipItem(
-                    'POWER ${flSpot.y} MW \n',
-                    TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    children: [
-                      TextSpan(
-                        text: "TIME " +
-                            DateFormat("HH:mm").format(DateTime.now().copyWith(
-                                hour: flSpot.x.floor(),
-                                minute:
-                                    (flSpot.x.remainder(1.0) * 60).floor())),
-                        // "${flSpot.x.floor()}:${(flSpot.x.remainder(1.0) * 60).floor()}",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.w900,
-                        ),
-                      )
-                    ],
-                    textAlign: textAlign,
-                  );
-                }).toList();
-              },
+                    double multiplier = (flSpot.y / unit.maxVoltage) *
+                        (maxFrequency - minFrequency);
+
+                    return LineTooltipItem(
+                      flSpot.barIndex == 0
+                          ? 'POWER ${flSpot.y.toStringAsFixed(2)} MW'
+                          : 'Frequency ${(multiplier + minFrequency).toStringAsFixed(2)} hz \n',
+                      const TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      children: flSpot.barIndex == 0
+                          ? []
+                          : [
+                              TextSpan(
+                                text: "TIME " +
+                                    DateFormat("HH:mm").format(DateTime.now()
+                                        .copyWith(
+                                            hour: flSpot.x.floor(),
+                                            minute:
+                                                (flSpot.x.remainder(1.0) * 60)
+                                                    .floor())),
+                                // "${flSpot.x.floor()}:${(flSpot.x.remainder(1.0) * 60).floor()}",
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w900,
+                                ),
+                              )
+                            ],
+                      textAlign: textAlign,
+                    );
+                  }).toList();
+                },
+              ),
             ),
-          ),
-          lineBarsData: [
-            LineChartBarData(
+            lineBarsData: [
+              LineChartBarData(
+                  dotData: const FlDotData(
+                    show: false,
+                  ),
+                  barWidth: 7,
+                  isStrokeCapRound: true,
+                  belowBarData: BarAreaData(
+                    show: true,
+                    gradient: const LinearGradient(colors: [
+                      Color(0x660b74b0),
+                      Color(0x6675479c),
+                      Color(0x66bd3861)
+                    ]),
+                  ),
+                  gradient: const LinearGradient(colors: [
+                    Color(0xff0b74b0),
+                    Color(0xff75479c),
+                    Color(0xffbd3861)
+                  ]),
+                  spots: points.map((point) {
+                    var time = DateFormat("HH:mm").parse(point["sample_time"]);
+                    return FlSpot(
+                        time.hour + (time.minute / 60), point["point_value"]);
+                  }).toList(),
+                  isCurved: true),
+              LineChartBarData(
                 dotData: const FlDotData(
                   show: false,
                 ),
                 barWidth: 7,
                 isStrokeCapRound: true,
-                belowBarData: BarAreaData(
-                  show: true,
-                  gradient: LinearGradient(colors: [
-                    Color(0x660b74b0),
-                    Color(0x6675479c),
-                    Color(0x66bd3861)
-                  ]),
-                ),
-                gradient: LinearGradient(colors: [
-                  Color(0xff0b74b0),
-                  Color(0xff75479c),
-                  Color(0xffbd3861)
-                ]),
-                spots: points.map((point) {
-                  var time = DateFormat("HH:mm").parse(point["sample_time"]);
-                  return FlSpot(
-                      time.hour + (time.minute / 60), point["point_value"]);
+                isCurved: true,
+                spots: freqPoints.map((freqPoint) {
+                  var time =
+                      DateFormat("HH:mm").parse(freqPoint["sample_time"]);
+                  double multiplier =
+                      (freqPoint["point_value"] - minFrequency) /
+                          (maxFrequency - minFrequency);
+                  return FlSpot(time.hour + (time.minute / 60),
+                      unit.maxVoltage * multiplier);
                 }).toList(),
-                isCurved: true),
-          ],
-          borderData: FlBorderData(
-              border: const Border(bottom: BorderSide(), left: BorderSide())),
-          gridData: const FlGridData(show: false),
-          titlesData: const FlTitlesData(
+              )
+            ],
+            borderData: FlBorderData(
+                border: const Border(bottom: BorderSide(), left: BorderSide())),
+            gridData: const FlGridData(show: false),
+            titlesData: FlTitlesData(
               bottomTitles: AxisTitles(
-                  axisNameWidget: Text(
+                  axisNameWidget: const Text(
                     "Time",
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
                   ),
@@ -255,54 +300,84 @@ class MyLineChartWidget extends StatelessWidget {
                       showTitles: true,
                       interval: 1,
                       reservedSize: 30)),
-              topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+              topTitles:
+                  const AxisTitles(sideTitles: SideTitles(showTitles: false)),
               rightTitles: AxisTitles(
-                  sideTitles: SideTitles(
-                showTitles: false,
-              )),
+                axisNameSize: 50,
+                axisNameWidget: const Text(
+                  "Frequency",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+                ),
+                sideTitles: SideTitles(
+                  getTitlesWidget: rightTitleWidgets,
+                  showTitles: true,
+                  reservedSize: 60,
+                ),
+              ),
               leftTitles: AxisTitles(
-                  axisNameSize: 50,
-                  axisNameWidget: Text(
-                    "Power (MW)",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
-                  ),
-                  sideTitles: SideTitles(
-                      getTitlesWidget: leftTitleWidgets,
-                      showTitles: true,
-                      reservedSize: 60))),
-        )),
+                axisNameSize: 50,
+                axisNameWidget: const Text(
+                  "Power (MW)",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+                ),
+                sideTitles: SideTitles(
+                    getTitlesWidget: leftTitleWidgets,
+                    showTitles: true,
+                    reservedSize: 60),
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
-}
 
-Widget bottomTitleWidgets(double value, TitleMeta meta) {
-  const style = TextStyle(
-    fontWeight: FontWeight.bold,
-    fontSize: 16,
-  );
-  Widget text;
-  if (value.toInt() % 3 == 0) {
-    text = Text('${value.toInt()}:00', style: style);
-  } else {
-    text = const Text('', style: style);
+  Widget bottomTitleWidgets(double value, TitleMeta meta) {
+    const style = TextStyle(
+      fontWeight: FontWeight.bold,
+      fontSize: 16,
+    );
+    Widget text;
+    if (value.toInt() % 3 == 0) {
+      text = Text('${value.toInt()}:00', style: style);
+    } else {
+      text = const Text('', style: style);
+    }
+
+    return SideTitleWidget(axisSide: meta.axisSide, child: text);
   }
 
-  return SideTitleWidget(axisSide: meta.axisSide, child: text);
-}
+  Widget leftTitleWidgets(double value, TitleMeta meta) {
+    const style = TextStyle(
+      color: Colors.black87,
+      fontWeight: FontWeight.bold,
+      fontSize: 16,
+    );
+    Widget text;
+    if (value.toInt() % 20 == 0) {
+      text = Text('${value}', style: style);
+    } else {
+      text = const Text('', style: style);
+    }
 
-Widget leftTitleWidgets(double value, TitleMeta meta) {
-  const style = TextStyle(
-    color: Colors.black87,
-    fontWeight: FontWeight.bold,
-    fontSize: 16,
-  );
-  Widget text;
-  if (value.toInt() % 20 == 0) {
-    text = Text('${value}', style: style);
-  } else {
-    text = const Text('', style: style);
+    return SideTitleWidget(axisSide: meta.axisSide, child: text);
   }
 
-  return SideTitleWidget(axisSide: meta.axisSide, child: text);
+  Widget rightTitleWidgets(double value, TitleMeta meta) {
+    const style = TextStyle(
+      color: Colors.black87,
+      fontWeight: FontWeight.bold,
+      fontSize: 16,
+    );
+    double divider = unit.maxVoltage / (maxFrequency - minFrequency);
+    Widget text;
+    if (value.toInt() % 20 == 0) {
+      text = Text((value / divider + minFrequency).toStringAsFixed(0),
+          style: style);
+    } else {
+      text = const Text('', style: style);
+    }
+
+    return SideTitleWidget(axisSide: meta.axisSide, child: text);
+  }
 }

@@ -9,13 +9,13 @@ class UnitAnalysisRepository {
   UnitAnalysisRepository({required ApiService apiService})
       : _apiService = apiService;
 
-  Future<List<dynamic>> getUnit24hrData(int id) async {
+  Future<dynamic> getUnit24hrData(int id) async {
     final api = _apiService.getApi();
     try {
       var response = await api.get(unit24hrURL + id.toString());
-      return response.data["unit_data"];
+      return response.data;
     } on DioException catch (e) {
-      print(e);
+      print(e.response);
       throw ApiException(
           exception: e,
           error: ["Unknown Error", "Unable to fetch data from server"]);
