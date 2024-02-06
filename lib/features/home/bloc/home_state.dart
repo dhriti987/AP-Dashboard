@@ -28,3 +28,5 @@ class NavigateToDashboardPageActionState extends HomeActionState {
 
   NavigateToDashboardPageActionState({required this.plant});
 }
+
+class LogoutSuccessState extends HomeActionState {}

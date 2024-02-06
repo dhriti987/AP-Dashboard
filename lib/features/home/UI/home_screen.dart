@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:streaming_data_dashboard/core/utilities/constants.dart';
@@ -28,6 +30,9 @@ class HomePage extends StatelessWidget {
         if (state is NavigateToDashboardPageActionState) {
           context.pushNamed("Dashboard", extra: state.plant);
         }
+        if (state is LogoutSuccessState) {
+          context.go("/login");
+        }
       },
       builder: (context, state) {
         Widget body = const Center(
@@ -41,6 +46,7 @@ class HomePage extends StatelessWidget {
           );
         } else if (state is HomeLoadingSuccessState) {
           plants = state.plants;
+
           body = loadedBody(plants);
         } else if (state is HomeLoadingFailedState) {
           body = const Center(
@@ -55,16 +61,45 @@ class HomePage extends StatelessWidget {
                 style: TextStyle(fontWeight: FontWeight.w800, fontSize: 30),
               ),
               actions: [
-                IconButton(
-                  onPressed: isAdmin
-                      ? () {
-                          homeBloc.add(SettingsButtonOnClickedEvent());
-                        }
-                      : null,
-                  icon: const Icon(
-                    Icons.settings_suggest_outlined,
-                  ),
-                  iconSize: 40,
+                // IconButton(
+                //   onPressed: isAdmin
+                //       ? () {
+                //           homeBloc.add(SettingsButtonOnClickedEvent());
+                //         }
+                //       : null,
+                //   icon: const Icon(
+                //     Icons.more_vert,
+                //   ),
+                //   iconSize: 40,
+                // )
+                PopupMenuButton<String>(
+                  onSelected: (value) {
+                    if (value == 'Settings') {
+                      homeBloc.add(SettingsButtonOnClickedEvent());
+                    } else if (value == 'Logout') {
+                      homeBloc.add(LogoutButtonClickedEvent());
+                      // Handle logout action
+                    }
+                  },
+                  itemBuilder: (BuildContext context) {
+                    return <PopupMenuEntry<String>>[
+                      PopupMenuItem<String>(
+                        value: 'Settings',
+                        enabled: isAdmin,
+                        child: const ListTile(
+                          leading: Icon(Icons.settings),
+                          title: Text('Settings'),
+                        ),
+                      ),
+                      const PopupMenuItem<String>(
+                        value: 'Logout',
+                        child: ListTile(
+                          leading: Icon(Icons.logout),
+                          title: Text('Logout'),
+                        ),
+                      ),
+                    ];
+                  },
                 )
               ]),
           body: body,
@@ -210,18 +245,79 @@ class _PlantItemWidgetState extends State<PlantItemWidget>
               //     ),
               //   ),
               // ),
-              Align(
-                  alignment: Alignment.bottomRight,
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Text(
-                      widget.plant.name,
-                      style: TextStyle(
-                          fontSize: size.height / 30,
-                          fontWeight: FontWeight.w900,
-                          color: Colors.white),
+              ClipRRect(
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+                  child: Container(
+                    height: height / 4,
+                    width: double.maxFinite,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(20),
+                          bottomRight: Radius.circular(20)),
+                      gradient: const LinearGradient(
+                          colors: [
+                            Color.fromARGB(193, 0, 0, 0),
+                            Color.fromARGB(56, 0, 0, 0)
+                          ],
+                          begin: Alignment.bottomCenter,
+                          end: Alignment.topCenter),
                     ),
-                  )),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Align(
+                            alignment: Alignment.bottomRight,
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  bottom: 10, right: 10, left: 10),
+                              child: Text.rich(TextSpan(
+                                  text: "Total Generation\n",
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  children: [
+                                    TextSpan(
+                                        text: widget.plant.totalGeneration
+                                            .toStringAsFixed(0),
+                                        style: TextStyle(
+                                            fontSize: 25,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w500))
+                                  ])),
+                            )),
+                        Align(
+                            alignment: Alignment.bottomRight,
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  bottom: 10, right: 10, left: 10),
+                              child: Text(
+                                widget.plant.name,
+                                style: TextStyle(
+                                    fontSize: size.height / 30,
+                                    fontWeight: FontWeight.w900,
+                                    color: Colors.white),
+                              ),
+                            )),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              // Align(
+              //     alignment: Alignment.bottomRight,
+              //     child: Padding(
+              //       padding: const EdgeInsets.all(10.0),
+              //       child: Text(
+              //         widget.plant.name,
+              //         style: TextStyle(
+              //             fontSize: size.height / 30,
+              //             fontWeight: FontWeight.w900,
+              //             color: Colors.white),
+              //       ),
+              //     )),
             ],
           ),
         ),

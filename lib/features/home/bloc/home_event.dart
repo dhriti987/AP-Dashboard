@@ -7,6 +7,8 @@ class HomeDataFetchEvent extends HomeEvent {}
 
 class SettingsButtonOnClickedEvent extends HomeEvent {}
 
+class LogoutButtonClickedEvent extends HomeEvent {}
+
 class OnPlantClickedEvent extends HomeEvent {
   final Plant plant;
 
