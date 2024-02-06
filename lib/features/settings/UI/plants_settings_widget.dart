@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:streaming_data_dashboard/core/utilities/constants.dart';
 import 'package:streaming_data_dashboard/core/utilities/plant_dialog.dart';
 import 'package:streaming_data_dashboard/features/settings/bloc/settings_bloc.dart';
 import 'package:streaming_data_dashboard/models/plant_model.dart';
@@ -17,6 +18,8 @@ class PlantsAndUnitSettings extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     List<Plant> plants = [];
+
+    Map<String, String> images = plant_dictionary;
     return BlocConsumer<SettingsBloc, SettingsState>(
       bloc: settingsBloc,
       listenWhen: (previous, current) => current is SettingsActionState,
@@ -111,6 +114,7 @@ class PlantsAndUnitSettings extends StatelessWidget {
                     // crossAxisAlignment: WrapCrossAlignment.start,
                     children: plants
                         .map<Widget>((plant) => PlantItemWidget(
+                              image: images[plant.name] ?? images["Mundra"]!,
                               plant: plant,
                               onTap: () {
                                 settingsBloc
@@ -146,11 +150,12 @@ class PlantsAndUnitSettings extends StatelessWidget {
 class PlantItemWidget extends StatefulWidget {
   const PlantItemWidget({
     super.key,
+    required this.image,
     required this.plant,
     required this.onTap,
     required this.onDelete,
   });
-
+  final String image;
   final Plant plant;
   final void Function() onTap;
   final void Function() onDelete;
@@ -200,9 +205,8 @@ class _PlantItemWidgetState extends State<PlantItemWidget>
           width: width,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
-            image: const DecorationImage(
-              image: NetworkImage(
-                  "https://www.adanipower.com/-/media/Project/Power/OperationalPowerPlants/mundra/Hi-tech-Infra/mundra2"),
+            image: DecorationImage(
+              image: NetworkImage(widget.image),
               fit: BoxFit.cover,
             ),
             boxShadow: const [

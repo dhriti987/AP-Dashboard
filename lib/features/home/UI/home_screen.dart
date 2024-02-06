@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
+import 'package:streaming_data_dashboard/core/utilities/constants.dart';
 import 'package:streaming_data_dashboard/features/home/bloc/home_bloc.dart';
 import 'package:streaming_data_dashboard/models/plant_model.dart';
 import 'package:streaming_data_dashboard/service_locator.dart';
@@ -73,6 +74,7 @@ class HomePage extends StatelessWidget {
   }
 
   SizedBox loadedBody(List<Plant> plants) {
+<<<<<<< HEAD
     Map<String, String> images = {
       "Mundra":
           "https://www.adanipower.com/-/media/Project/Power/OperationalPowerPlants/mundra/Hi-tech-Infra/mundra2",
@@ -87,6 +89,9 @@ class HomePage extends StatelessWidget {
       "Raigarh":
           "https://www.adanipower.com/-/media/Project/Power/OperationalPowerPlants/Kawai/Hi-tech-Infra/kawai_1"
     };
+=======
+    Map<String, String> images = plant_dictionary;
+>>>>>>> b6204536f9a600b7dd32bd7bc7aeca38d9d4d9ca
 
     return SizedBox(
       width: double.maxFinite,
@@ -101,7 +106,7 @@ class HomePage extends StatelessWidget {
             // crossAxisAlignment: WrapCrossAlignment.start,
             children: plants
                 .map<Widget>((plant) => PlantItemWidget(
-                      image: images[plant.name]!,
+                      image: images[plant.name] ?? images["Mundra"]!,
                       plant: plant,
                       onTap: () {
                         homeBloc.add(OnPlantClickedEvent(plant: plant));

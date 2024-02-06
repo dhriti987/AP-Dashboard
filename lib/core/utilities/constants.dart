@@ -1,0 +1,20 @@
+var plant_dictionary = {
+  'Mundra':
+      'https://www.adanipower.com/-/media/Project/Power/OperationalPowerPlants/mundra/Bannner/mundra_banner1.jpg',
+  'Tirora':
+      'https://www.adanipower.com/-/media/Project/Power/OperationalPowerPlants/Tiroda/Bannner/Tirora_banner_.jpg',
+  'Tiroda':
+      'https://www.adanipower.com/-/media/Project/Power/OperationalPowerPlants/Tiroda/Bannner/Tirora_banner_.jpg',
+  'Kawai':
+      'https://www.adanipower.com/-/media/Project/Power/OperationalPowerPlants/Kawai/Kawai.jpg',
+  'Udupi':
+      'https://www.adanipower.com/-/media/Project/Power/OperationalPowerPlants/Udupi/Bannner/Udupi_banner1.jpg',
+  'Raigarh':
+      'https://www.adanipower.com/-/media/Project/Power/OperationalPowerPlants/Raigarh-Chhattisgarh/Raighar-Edited.jpg',
+  'Raipur':
+      'https://www.adanipower.com/-/media/Project/Power/OperationalPowerPlants/Raipur-Chhattisgarh/Raipur3.jpg',
+  'Mahan':
+      'https://www.adanipower.com/-/media/Project/Power/OperationalPowerPlants/Mahan-Madhya-Pradesh/Mahan.JPG',
+  'Godda':
+      'https://images.moneycontrol.com/static-mcnews/2022/05/Thermal-power-plant-2-770x433.png'
+};
