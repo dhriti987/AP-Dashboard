@@ -3,18 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:streaming_data_dashboard/features/units_edit/bloc/units_edit_bloc.dart';
 import 'package:streaming_data_dashboard/models/plant_model.dart';
 import 'package:streaming_data_dashboard/models/unit_model.dart';
-import 'package:streaming_data_dashboard/service_locator.dart';
 
 class UnitDialog extends StatelessWidget {
   const UnitDialog(
       {super.key,
       required this.plant,
       this.isEditUnitDialog = false,
-      this.unit});
+      this.unit,
+      required this.unitsEditBloc});
 
   final Plant plant;
   final bool isEditUnitDialog;
   final Unit? unit;
+  final UnitsEditBloc unitsEditBloc;
 
   @override
   Widget build(BuildContext context) {
@@ -26,8 +27,6 @@ class UnitDialog extends StatelessWidget {
         TextEditingController(text: isEditUnitDialog ? unit!.unit : "");
     TextEditingController ratedPowerController = TextEditingController(
         text: isEditUnitDialog ? unit!.maxVoltage.toString() : "");
-
-    UnitsEditBloc unitsEditBloc = sl.get<UnitsEditBloc>();
 
     final _formKey = GlobalKey<FormState>();
 

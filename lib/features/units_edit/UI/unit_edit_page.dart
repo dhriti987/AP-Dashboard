@@ -99,6 +99,7 @@ class _UnitEditPageState extends State<UnitEditPage> {
                   plant: widget.plant,
                   isEditUnitDialog: true,
                   unit: state.unit,
+                  unitsEditBloc: unitsEditBloc,
                 );
               },
             );
@@ -109,6 +110,7 @@ class _UnitEditPageState extends State<UnitEditPage> {
               builder: (context) {
                 return UnitDialog(
                   plant: widget.plant,
+                  unitsEditBloc: unitsEditBloc,
                 );
               },
             );

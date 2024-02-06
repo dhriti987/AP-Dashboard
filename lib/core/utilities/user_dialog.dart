@@ -1,15 +1,17 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:streaming_data_dashboard/features/settings/bloc/settings_bloc.dart';
-import 'package:streaming_data_dashboard/features/units_edit/bloc/units_edit_bloc.dart';
 import 'package:streaming_data_dashboard/models/user_model.dart';
-import 'package:streaming_data_dashboard/service_locator.dart';
 
 class UserDialog extends StatefulWidget {
-  const UserDialog({super.key, this.isEditUserDialog = false, this.user});
+  const UserDialog(
+      {super.key,
+      this.isEditUserDialog = false,
+      this.user,
+      required this.settingsBloc});
 
   final bool isEditUserDialog;
   final UserModel? user;
+  final SettingsBloc settingsBloc;
 
   @override
   State<UserDialog> createState() => _UserDialogState();
@@ -31,8 +33,6 @@ class _UserDialogState extends State<UserDialog> {
         text: widget.isEditUserDialog ? widget.user!.email : "");
     TextEditingController contactNoController = TextEditingController(
         text: widget.isEditUserDialog ? widget.user!.contact : "");
-
-    SettingsBloc settingsBloc = sl.get<SettingsBloc>();
 
     final _formKey = GlobalKey<FormState>();
     var isAdmin = false;
@@ -129,7 +129,7 @@ class _UserDialogState extends State<UserDialog> {
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
                             if (widget.isEditUserDialog) {
-                              settingsBloc.add(EditUserEvent(
+                              widget.settingsBloc.add(EditUserEvent(
                                   user: UserModel(
                                       id: widget.user!.id,
                                       employeeId: employeeIdController.text,
@@ -141,7 +141,7 @@ class _UserDialogState extends State<UserDialog> {
                                       isAdmin: isAdmin)));
                               Navigator.of(context).pop();
                             } else {
-                              settingsBloc.add(AddUserEvent(
+                              widget.settingsBloc.add(AddUserEvent(
                                   employeeId: employeeIdController.text,
                                   firstName: firstNameController.text,
                                   lastName: lastNameController.text,

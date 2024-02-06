@@ -1,26 +1,18 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:streaming_data_dashboard/features/settings/bloc/settings_bloc.dart';
-import 'package:streaming_data_dashboard/features/units_edit/bloc/units_edit_bloc.dart';
-import 'package:streaming_data_dashboard/models/plant_model.dart';
-import 'package:streaming_data_dashboard/models/unit_model.dart';
-import 'package:streaming_data_dashboard/service_locator.dart';
 
 class PlantDialog extends StatelessWidget {
-  const PlantDialog({super.key});
+  const PlantDialog({super.key, required this.settingsBloc});
+
+  final SettingsBloc settingsBloc;
 
   @override
   Widget build(BuildContext context) {
     TextEditingController plantNameController = TextEditingController();
 
-    SettingsBloc settingsBloc = sl.get<SettingsBloc>();
-
     final _formKey = GlobalKey<FormState>();
 
     return AlertDialog(
-      title: Column(
-        children: [],
-      ),
       content: SizedBox(
         width: 600,
         child: SingleChildScrollView(
