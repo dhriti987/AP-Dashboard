@@ -270,11 +270,11 @@ class _PlantItemWidgetState extends State<PlantItemWidget>
                             alignment: Alignment.bottomRight,
                             child: Padding(
                               padding: const EdgeInsets.only(
-                                  bottom: 10, right: 10, left: 10),
+                                  bottom: 2, right: 10, left: 10),
                               child: Text.rich(TextSpan(
                                   text: "Total Generation\n",
                                   style: TextStyle(
-                                    fontSize: 15,
+                                    fontSize: height / 20,
                                     color: Colors.white,
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -283,7 +283,7 @@ class _PlantItemWidgetState extends State<PlantItemWidget>
                                         text: widget.plant.totalGeneration
                                             .toStringAsFixed(0),
                                         style: TextStyle(
-                                            fontSize: 25,
+                                            fontSize: height / 8,
                                             color: Colors.white,
                                             fontWeight: FontWeight.w500))
                                   ])),

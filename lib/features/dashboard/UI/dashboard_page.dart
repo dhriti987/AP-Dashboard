@@ -221,6 +221,18 @@ class _UnitDataWidgetState extends State<UnitDataWidget> {
     Size size = MediaQuery.of(context).size;
     double height = size.height / 3.7;
     double width = ((size.width / 7) * 5) / 3.4;
+    var color;
+
+    if (widget.isUnit) {
+      if (widget.unit.unitValue <= (widget.unit.maxVoltage * 0.05)) {
+        color = Colors.red[500];
+      } else {
+        color = Colors.white;
+      }
+    } else {
+      color = widget.bgColor;
+    }
+
     return InkWell(
       onTap: widget.onTap,
       child: Container(
@@ -228,7 +240,7 @@ class _UnitDataWidgetState extends State<UnitDataWidget> {
         width: width,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          color: (widget.isUnit) ? Colors.white : widget.bgColor,
+          color: color,
           boxShadow: const [
             BoxShadow(
               color: Colors.black45,
@@ -303,7 +315,7 @@ class _UnitDataWidgetState extends State<UnitDataWidget> {
                       child: FittedBox(
                         fit: BoxFit.fill,
                         child: Text(
-                          widget.unitValue.toStringAsFixed(0),
+                          widget.unitValue.abs().toStringAsFixed(0),
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                           ),
